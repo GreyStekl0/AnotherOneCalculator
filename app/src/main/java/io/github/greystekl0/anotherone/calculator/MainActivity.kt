@@ -16,7 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -25,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import io.github.greystekl0.anotherone.calculator.ui.theme.AnotherOneCalculatorTheme
+import net.objecthunter.exp4j.ExpressionBuilder
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,77 +40,88 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Suppress("ktlint:standard:function-naming")
 @Preview(showBackground = true)
 @Composable
 private fun Calculator(innerPadding: PaddingValues = PaddingValues()) {
     var example by
         remember {
-            mutableStateOf("3+2")
+            mutableStateOf("0")
         }
-    val result by
+    var result by
         remember {
-            mutableIntStateOf(0)
+            mutableStateOf("0")
         }
-    Column(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+    Column(
+        modifier =
+            Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+    ) {
         Text(text = example, fontSize = 30.sp)
-        Text(text = result.toString(), fontSize = 30.sp)
+        Text(text = "= $result", fontSize = 30.sp)
         Row(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { example = "" }) {
+            Button(onClick = { example = "0" }) {
                 Text("AC")
             }
-            Button(onClick = { }) {
+            Button(onClick = {
+                example =
+                    if (example.length == 1) {
+                        "0"
+                    } else {
+                        example.dropLast(1)
+                    }
+            }) {
                 Image(
                     painter = painterResource(R.drawable.backspace),
                     contentDescription = "backspace",
                 )
             }
-            Button(onClick = { }) {
+            Button(onClick = { example += "%" }) {
                 Text("%")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example.last() != '/') example += "/" }) {
                 Text("/")
             }
         }
         Row(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { }) {
+            Button(onClick = { if (example == "0") example = "7" else example += "7" }) {
                 Text("7")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example == "0") example = "8" else example += "8" }) {
                 Text("8")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example == "0") example = "9" else example += "9" }) {
                 Text("9")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example.last() != '*') example += "*" }) {
                 Text("*")
             }
         }
         Row(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { }) {
+            Button(onClick = { if (example == "0") example = "4" else example += "4" }) {
                 Text("4")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example == "0") example = "5" else example += "5" }) {
                 Text("5")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example == "0") example = "6" else example += "6" }) {
                 Text("6")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example.last() != '-') example += "-" }) {
                 Text("-")
             }
         }
         Row(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { }) {
+            Button(onClick = { if (example == "0") example = "1" else example += "1" }) {
                 Text("1")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example == "0") example = "2" else example += "2" }) {
                 Text("2")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example == "0") example = "3" else example += "3" }) {
                 Text("3")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example.last() != '+') example += "+" }) {
                 Text("+")
             }
         }
@@ -118,15 +129,33 @@ private fun Calculator(innerPadding: PaddingValues = PaddingValues()) {
             Button(onClick = { }) {
                 Text("?")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example == "0") example = "0" else example += "0" }) {
                 Text("0")
             }
-            Button(onClick = { }) {
+            Button(onClick = { if (example.last() != ',') example += "," }) {
                 Text(",")
             }
-            Button(onClick = { }) {
+            Button(onClick = {
+                val temp =
+                    calculate(if (example.last() in ",+-*/") example.dropLast(1) else example)
+                result =
+                    if (temp == null) {
+                        "ERROR"
+                    } else if (temp % 1 == 0.0) {
+                        temp.toInt().toString()
+                    } else {
+                        temp.toString()
+                    }
+            }) {
                 Text("=")
             }
         }
     }
 }
+
+fun calculate(expression: String): Double? =
+    try {
+        ExpressionBuilder(expression).build().evaluate()
+    } catch (_: Exception) {
+        null
+    }
