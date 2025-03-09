@@ -40,17 +40,52 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+private fun NumberButton(
+    number: String,
+    example: String,
+    onUpdate: (String) -> Unit,
+) {
+    Button(onClick = {
+        val newValue = if (example == "0") number else example + number
+        onUpdate(newValue)
+    }) {
+        Text(number)
+    }
+}
+
+@Composable
+private fun OperatorButton(
+    operator: String,
+    example: String,
+    onUpdate: (String) -> Unit,
+) {
+    Button(onClick = {
+        val newExample =
+            if (example.last() in ",+-*/") {
+                example.dropLast(1) + operator
+            } else if (example.last().toString() != operator) {
+                example + operator
+            } else {
+                example
+            }
+        onUpdate(newExample)
+    }) {
+        Text(operator)
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun Calculator(innerPadding: PaddingValues = PaddingValues()) {
-    var example by
-        remember {
-            mutableStateOf("0")
-        }
-    var result by
-        remember {
-            mutableStateOf("0")
-        }
+    var example by remember { mutableStateOf("0") }
+    var result by remember { mutableStateOf("0") }
+
+    fun updateExampleAndCalculate(newExample: String) {
+        example = newExample
+        result = calculate(example)
+    }
+
     Column(
         modifier =
             Modifier
@@ -59,103 +94,85 @@ private fun Calculator(innerPadding: PaddingValues = PaddingValues()) {
     ) {
         Text(text = example, fontSize = 30.sp)
         Text(text = "= $result", fontSize = 30.sp)
+
         Row(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { example = "0" }) {
-                Text("AC")
-            }
+            Button(onClick = { updateExampleAndCalculate("0") }) { Text("C") }
+
             Button(onClick = {
-                example =
-                    if (example.length == 1) {
-                        "0"
-                    } else {
-                        example.dropLast(1)
-                    }
+                updateExampleAndCalculate(if (example.length == 1) "0" else example.dropLast(1))
             }) {
-                Image(
-                    painter = painterResource(R.drawable.backspace),
-                    contentDescription = "backspace",
-                )
+                Image(painterResource(R.drawable.backspace), contentDescription = "backspace")
             }
-            Button(onClick = { example += "%" }) {
-                Text("%")
-            }
-            Button(onClick = { if (example.last() != '/') example += "/" }) {
-                Text("/")
-            }
-        }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { if (example == "0") example = "7" else example += "7" }) {
-                Text("7")
-            }
-            Button(onClick = { if (example == "0") example = "8" else example += "8" }) {
-                Text("8")
-            }
-            Button(onClick = { if (example == "0") example = "9" else example += "9" }) {
-                Text("9")
-            }
-            Button(onClick = { if (example.last() != '*') example += "*" }) {
-                Text("*")
-            }
-        }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { if (example == "0") example = "4" else example += "4" }) {
-                Text("4")
-            }
-            Button(onClick = { if (example == "0") example = "5" else example += "5" }) {
-                Text("5")
-            }
-            Button(onClick = { if (example == "0") example = "6" else example += "6" }) {
-                Text("6")
-            }
-            Button(onClick = { if (example.last() != '-') example += "-" }) {
-                Text("-")
-            }
-        }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { if (example == "0") example = "1" else example += "1" }) {
-                Text("1")
-            }
-            Button(onClick = { if (example == "0") example = "2" else example += "2" }) {
-                Text("2")
-            }
-            Button(onClick = { if (example == "0") example = "3" else example += "3" }) {
-                Text("3")
-            }
-            Button(onClick = { if (example.last() != '+') example += "+" }) {
-                Text("+")
-            }
-        }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Button(onClick = { }) {
-                Text("?")
-            }
-            Button(onClick = { if (example == "0") example = "0" else example += "0" }) {
-                Text("0")
-            }
-            Button(onClick = { if (example.last() != ',') example += "," }) {
-                Text(",")
-            }
+
             Button(onClick = {
-                val temp =
-                    calculate(if (example.last() in ",+-*/") example.dropLast(1) else example)
-                result =
-                    if (temp == null) {
-                        "ERROR"
-                    } else if (temp % 1 == 0.0) {
-                        temp.toInt().toString()
+                result = calculate("$example / 100")
+                example = result
+            }) { Text("%") }
+
+            OperatorButton("/", example, ::updateExampleAndCalculate)
+        }
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            NumberButton("7", example, ::updateExampleAndCalculate)
+            NumberButton("8", example, ::updateExampleAndCalculate)
+            NumberButton("9", example, ::updateExampleAndCalculate)
+            OperatorButton("*", example, ::updateExampleAndCalculate)
+        }
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            NumberButton("4", example, ::updateExampleAndCalculate)
+            NumberButton("5", example, ::updateExampleAndCalculate)
+            NumberButton("6", example, ::updateExampleAndCalculate)
+            OperatorButton("-", example, ::updateExampleAndCalculate)
+        }
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            NumberButton("1", example, ::updateExampleAndCalculate)
+            NumberButton("2", example, ::updateExampleAndCalculate)
+            NumberButton("3", example, ::updateExampleAndCalculate)
+            OperatorButton("+", example, ::updateExampleAndCalculate)
+        }
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { }) { Text("?") }
+            NumberButton("0", example, ::updateExampleAndCalculate)
+
+            Button(onClick = {
+                val operators = listOf('+', '-', '*', '/')
+                val lastOperatorIndex = example.indexOfLast { it in operators }
+                val currentOperand =
+                    if (lastOperatorIndex == -1) example else example.substring(lastOperatorIndex + 1)
+
+                val newExample =
+                    if (',' !in currentOperand && example.last() !in ",+-*/") {
+                        "$example,"
                     } else {
-                        temp.toString()
+                        example
                     }
-            }) {
-                Text("=")
-            }
+                updateExampleAndCalculate(newExample)
+            }) { Text(",") }
+
+            Button(onClick = { example = result }) { Text("=") }
         }
     }
 }
 
-fun calculate(expression: String): Double? =
-    try {
-        ExpressionBuilder(expression).build().evaluate()
+fun calculate(expression: String): String {
+    val sanitizedExpression = expression.removeSuffix()
+
+    return try {
+        val result = ExpressionBuilder(sanitizedExpression.replace(',', '.')).build().evaluate()
+        result.formatResult()
     } catch (_: Exception) {
-        null
+        "ERROR"
+    }
+}
+
+private fun String.removeSuffix(): String = if (last() in ",+-*/") dropLast(1) else this
+
+private fun Double.formatResult(): String =
+    if (this % 1 == 0.0) {
+        toInt().toString()
+    } else {
+        toString()
     }
