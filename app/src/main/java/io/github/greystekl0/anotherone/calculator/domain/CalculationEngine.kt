@@ -6,7 +6,7 @@ fun calculate(expression: String): String {
     val sanitizedExpression = expression.removeSuffix()
 
     return try {
-        val result = ExpressionBuilder(sanitizedExpression.replace(',', '.')).build().evaluate()
+        val result = ExpressionBuilder(sanitizedExpression).build().evaluate()
         result.formatResult()
     } catch (_: Exception) {
         "ERROR"
@@ -19,5 +19,9 @@ private fun Double.formatResult(): String =
     if (this % 1 == 0.0) {
         toInt().toString()
     } else {
-        toString()
+        val formattedResult =
+            "%.10f"
+                .format(this)
+                .replace("0+$".toRegex(), "")
+        formattedResult
     }

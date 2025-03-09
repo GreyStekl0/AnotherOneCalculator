@@ -10,6 +10,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,7 +49,7 @@ fun TopButtonRow(
                     .aspectRatio(1f),
             shape = RoundedCornerShape(10.dp),
         ) {
-            Image(painterResource(R.drawable.backspace), contentDescription = "backspace")
+            Image(painterResource(R.drawable.backspace), contentDescription = "backspace", colorFilter = ColorFilter.tint(Color.White))
         }
 
         Button(
@@ -163,8 +165,8 @@ fun BottomButtonRow(
                     }
 
                 val newExample =
-                    if (',' !in currentOperand && example.last() !in ",+-*/") {
-                        "$example,"
+                    if ('.' !in currentOperand && example.last() !in ",+-*/") {
+                        "$example."
                     } else {
                         example
                     }
@@ -175,7 +177,7 @@ fun BottomButtonRow(
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f),
-        ) { Text(",", fontSize = 30.sp) }
+        ) { Text(".", fontSize = 30.sp) }
 
         Button(
             onClick = { onUpdate(result) },
