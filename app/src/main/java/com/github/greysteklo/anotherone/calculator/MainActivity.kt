@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.greysteklo.anotherone.calculator.ui.theme.AnotherOneCalculatorTheme
+import net.objecthunter.exp4j.ExpressionBuilder
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +49,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Calculator(modifier: Modifier = Modifier) {
-    val example by remember { mutableStateOf("2+2") }
-    val result by remember { mutableStateOf("4") }
+    var example by remember { mutableStateOf("2+2") }
+    var result by remember { mutableStateOf("4") }
     Column(
         modifier =
             modifier
@@ -76,7 +78,10 @@ fun Calculator(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    example = "0"
+                    result = "0"
+                },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -103,7 +108,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = "%", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example += "/" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -117,7 +122,7 @@ fun Calculator(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = if (example == "0") "7" else example + "7" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -126,7 +131,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = "7", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = if (example == "0") "8" else example + "8" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -135,7 +140,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = "8", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = if (example == "0") "9" else example + "9" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -158,7 +163,7 @@ fun Calculator(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = if (example == "0") "4" else example + "4" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -167,7 +172,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = "4", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = if (example == "0") "5" else example + "5" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -176,7 +181,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = "5", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = if (example == "0") "6" else example + "6" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -185,7 +190,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = "6", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example += "-" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -199,7 +204,7 @@ fun Calculator(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = if (example == "0") "1" else example + "1" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -208,7 +213,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = "1", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = if (example == "0") "2" else example + "2" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -217,7 +222,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = "2", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = if (example == "0") "3" else example + "3" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -226,7 +231,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = "3", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example += "+" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -240,7 +245,7 @@ fun Calculator(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = if (example == "0") "0" else example + "0" },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -249,7 +254,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = "0", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example += "," },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -258,7 +263,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 Text(text = ",", fontSize = 45.sp)
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { example = example.dropLast(1) },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -272,7 +277,7 @@ fun Calculator(modifier: Modifier = Modifier) {
                 )
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { result = calculate(example) },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)
@@ -282,6 +287,12 @@ fun Calculator(modifier: Modifier = Modifier) {
             }
         }
     }
+}
+
+fun calculate(example: String): String {
+    val expressionBuilder = ExpressionBuilder(example)
+    val result = expressionBuilder.build().evaluate()
+    return result.toString()
 }
 
 @Preview(showBackground = true)
