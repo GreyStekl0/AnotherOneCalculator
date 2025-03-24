@@ -1,4 +1,4 @@
-package com.github.greysteklo.anotherone.calculator.ui
+package com.github.greysteklo.anotherone.calculator.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
