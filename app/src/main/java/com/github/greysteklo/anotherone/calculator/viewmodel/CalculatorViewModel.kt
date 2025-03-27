@@ -9,12 +9,14 @@ import com.github.greysteklo.anotherone.calculator.domain.usecase.DeleteLastChar
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterDecimalUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterNumberUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterOperationUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@HiltViewModel
 class CalculatorViewModel : ViewModel() {
     private val _state = MutableStateFlow(CalculatorState())
     val state: StateFlow<CalculatorState> = _state.asStateFlow()
