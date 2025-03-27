@@ -1,18 +1,23 @@
+// CalculatorViewModel.kt
 package com.github.greysteklo.anotherone.calculator.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.greysteklo.anotherone.calculator.model.CalculatorState
+import com.github.greysteklo.anotherone.calculator.domain.model.CalculatorState
+import com.github.greysteklo.anotherone.calculator.domain.usecase.CalculateExpressionUseCase
+import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterNumberUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import net.objecthunter.exp4j.ExpressionBuilder
 
 class CalculatorViewModel : ViewModel() {
     private val _state = MutableStateFlow(CalculatorState())
     val state: StateFlow<CalculatorState> = _state.asStateFlow()
+
+    private val calculateExpressionUseCase = CalculateExpressionUseCase()
+    private val enterNumberUseCase = EnterNumberUseCase()
 
     fun onAction(action: CalculatorAction) {
         when (action) {
@@ -29,10 +34,9 @@ class CalculatorViewModel : ViewModel() {
 
     private fun enterNumber(number: Int) {
         val expression = state.value.expression
+        val newExpression = enterNumberUseCase.execute(expression, number)
         _state.update { currentState ->
-            currentState.copy(
-                expression = if (expression == "0") number.toString() else expression + number.toString(),
-            )
+            currentState.copy(expression = newExpression)
         }
     }
 
@@ -75,27 +79,8 @@ class CalculatorViewModel : ViewModel() {
 
     private fun calculate() {
         viewModelScope.launch {
-            try {
-                val expression = state.value.expression.replace(",", ".")
-                val expressionBuilder = ExpressionBuilder(expression)
-                val result = expressionBuilder.build().evaluate()
-
-                // Format result to avoid unnecessary decimal places
-                val formattedResult =
-                    if (result == result.toLong().toDouble()) {
-                        result.toLong().toString()
-                    } else {
-                        result.toString().replace(".", ",")
-                    }
-
-                _state.update { currentState ->
-                    currentState.copy(result = formattedResult)
-                }
-            } catch (_: Exception) {
-                _state.update { currentState ->
-                    currentState.copy(result = "Error")
-                }
-            }
+            val newState = calculateExpressionUseCase.execute(state.value.expression)
+            _state.update { newState }
         }
     }
 }
