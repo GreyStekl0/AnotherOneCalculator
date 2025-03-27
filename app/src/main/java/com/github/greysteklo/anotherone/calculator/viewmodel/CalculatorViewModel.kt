@@ -1,11 +1,14 @@
-// CalculatorViewModel.kt
 package com.github.greysteklo.anotherone.calculator.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.greysteklo.anotherone.calculator.domain.model.CalculatorState
 import com.github.greysteklo.anotherone.calculator.domain.usecase.CalculateExpressionUseCase
+import com.github.greysteklo.anotherone.calculator.domain.usecase.ClearAllUseCase
+import com.github.greysteklo.anotherone.calculator.domain.usecase.DeleteLastCharacterUseCase
+import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterDecimalUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterNumberUseCase
+import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterOperationUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +21,10 @@ class CalculatorViewModel : ViewModel() {
 
     private val calculateExpressionUseCase = CalculateExpressionUseCase()
     private val enterNumberUseCase = EnterNumberUseCase()
+    private val deleteLastCharacterUseCase = DeleteLastCharacterUseCase()
+    private val clearAllUseCase = ClearAllUseCase()
+    private val enterOperationUseCase = EnterOperationUseCase()
+    private val enterDecimalUseCase = EnterDecimalUseCase()
 
     fun onAction(action: CalculatorAction) {
         when (action) {
@@ -42,27 +49,32 @@ class CalculatorViewModel : ViewModel() {
 
     private fun enterOperation(operation: String) {
         _state.update { currentState ->
-            currentState.copy(expression = currentState.expression + operation)
+            currentState.copy(
+                expression =
+                    enterOperationUseCase.execute(
+                        currentState.expression,
+                        operation,
+                    ),
+            )
         }
     }
 
     private fun enterDecimal() {
         _state.update { currentState ->
-            currentState.copy(expression = currentState.expression + ",")
+            currentState.copy(expression = enterDecimalUseCase.execute(currentState.expression))
         }
     }
 
     private fun clearAll() {
         _state.update {
-            CalculatorState()
+            clearAllUseCase.execute()
         }
     }
 
     private fun delete() {
-        val expression = state.value.expression
         _state.update { currentState ->
             currentState.copy(
-                expression = if (expression.length <= 1) "0" else expression.dropLast(1),
+                expression = deleteLastCharacterUseCase.execute(currentState.expression),
             )
         }
     }
