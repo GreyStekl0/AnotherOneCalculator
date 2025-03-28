@@ -1,4 +1,4 @@
-package com.github.greysteklo.anotherone.calculator.ui.screen
+package com.github.greysteklo.anotherone.calculator.ui.calculator
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -24,11 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.greysteklo.anotherone.calculator.R
 import com.github.greysteklo.anotherone.calculator.ui.theme.AnotherOneCalculatorTheme
-import com.github.greysteklo.anotherone.calculator.viewmodel.CalculatorAction
-import com.github.greysteklo.anotherone.calculator.viewmodel.CalculatorViewModel
 
 @Composable
 fun CalculatorScreen(
