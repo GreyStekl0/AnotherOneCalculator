@@ -1,5 +1,6 @@
-package com.github.greysteklo.anotherone.calculator.domain.service
+package com.github.greysteklo.anotherone.calculator.data.service
 
+import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluator
 import net.objecthunter.exp4j.ExpressionBuilder
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
 import java.util.EmptyStackException

@@ -1,7 +1,7 @@
 package com.github.greysteklo.anotherone.calculator.di
 
+import com.github.greysteklo.anotherone.calculator.data.service.ExpressionEvaluatorImpl
 import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluator
-import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluatorImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
