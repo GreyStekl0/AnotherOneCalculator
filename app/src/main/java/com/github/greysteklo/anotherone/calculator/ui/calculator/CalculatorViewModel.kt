@@ -57,9 +57,8 @@ class CalculatorViewModel
         }
 
         private fun clearAll() {
-            _state.update {
-                actions.clearAll.execute()
-            }
+            val newState = actions.clearAll.execute()
+            _state.update { newState }
         }
 
         private fun delete() {
