@@ -35,9 +35,7 @@ class CalculatorViewModel
             val expression = state.value.expression
             val newExpression = actions.enterNumber.execute(expression, number)
             val newState = actions.calculate.execute(newExpression)
-            _state.update {
-                newState
-            }
+            _state.update { newState }
         }
 
         private fun enterOperation(operation: String) {
@@ -68,9 +66,7 @@ class CalculatorViewModel
             val expression = state.value.expression
             val newExpression = actions.deleteLastChar.execute(expression)
             val newState = actions.calculate.execute(newExpression)
-            _state.update {
-                newState
-            }
+            _state.update { newState }
         }
 
         private fun enterParentheses() {
@@ -81,9 +77,7 @@ class CalculatorViewModel
         private fun enterPercent() {
             val expression = state.value.expression
             val newState = actions.enterPercent.execute(expression)
-            _state.update {
-                newState
-            }
+            _state.update { newState }
         }
 
         private fun enterEqually() {
