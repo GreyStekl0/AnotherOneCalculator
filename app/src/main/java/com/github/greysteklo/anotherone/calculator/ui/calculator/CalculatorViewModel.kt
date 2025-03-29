@@ -3,12 +3,6 @@ package com.github.greysteklo.anotherone.calculator.ui.calculator
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.greysteklo.anotherone.calculator.domain.model.CalculatorState
-import com.github.greysteklo.anotherone.calculator.domain.usecase.CalculateExpressionUseCase
-import com.github.greysteklo.anotherone.calculator.domain.usecase.ClearAllUseCase
-import com.github.greysteklo.anotherone.calculator.domain.usecase.DeleteLastCharacterUseCase
-import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterDecimalUseCase
-import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterNumberUseCase
-import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterOperationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,12 +15,7 @@ import javax.inject.Inject
 class CalculatorViewModel
     @Inject
     constructor(
-        private val enterNumberUseCase: EnterNumberUseCase,
-        private val deleteLastCharacterUseCase: DeleteLastCharacterUseCase,
-        private val clearAllUseCase: ClearAllUseCase,
-        private val enterOperationUseCase: EnterOperationUseCase,
-        private val enterDecimalUseCase: EnterDecimalUseCase,
-        private val calculateExpressionUseCase: CalculateExpressionUseCase,
+        private val actions: CalculatorActions,
     ) : ViewModel() {
         private val _state = MutableStateFlow(CalculatorState())
         val state: StateFlow<CalculatorState> = _state.asStateFlow()
@@ -46,7 +35,7 @@ class CalculatorViewModel
 
         private fun enterNumber(number: Int) {
             val expression = state.value.expression
-            val newExpression = enterNumberUseCase.execute(expression, number)
+            val newExpression = actions.enterNumber.execute(expression, number)
             _state.update { currentState ->
                 currentState.copy(expression = newExpression)
             }
@@ -56,7 +45,7 @@ class CalculatorViewModel
             _state.update { currentState ->
                 currentState.copy(
                     expression =
-                        enterOperationUseCase.execute(
+                        actions.enterOperation.execute(
                             currentState.expression,
                             operation,
                         ),
@@ -66,20 +55,20 @@ class CalculatorViewModel
 
         private fun enterDecimal() {
             _state.update { currentState ->
-                currentState.copy(expression = enterDecimalUseCase.execute(currentState.expression))
+                currentState.copy(expression = actions.enterDecimal.execute(currentState.expression))
             }
         }
 
         private fun clearAll() {
             _state.update {
-                clearAllUseCase.execute()
+                actions.clearAll.execute()
             }
         }
 
         private fun delete() {
             _state.update { currentState ->
                 currentState.copy(
-                    expression = deleteLastCharacterUseCase.execute(currentState.expression),
+                    expression = actions.deleteLastChar.execute(currentState.expression),
                 )
             }
         }
@@ -90,13 +79,15 @@ class CalculatorViewModel
         }
 
         private fun enterPercent() {
-            // TODO: Implement percent logic
-            // This is a placeholder for future implementation
+            viewModelScope.launch {
+                val newState = actions.enterPercent.execute(state.value.expression)
+                _state.update { newState }
+            }
         }
 
         private fun calculate() {
             viewModelScope.launch {
-                val newState = calculateExpressionUseCase.execute(state.value.expression)
+                val newState = actions.calculate.execute(state.value.expression)
                 _state.update { newState }
             }
         }
