@@ -1,14 +1,12 @@
 package com.github.greysteklo.anotherone.calculator.ui.calculator
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.github.greysteklo.anotherone.calculator.domain.valueobject.CalculatorState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +24,7 @@ class CalculatorViewModel
                 is CalculatorAction.Decimal -> enterDecimal()
                 is CalculatorAction.Clear -> clearAll()
                 is CalculatorAction.Operation -> enterOperation(action.operation)
-                is CalculatorAction.Calculate -> calculate()
+                is CalculatorAction.Equally -> enterEqually()
                 is CalculatorAction.Delete -> delete()
                 is CalculatorAction.Parentheses -> enterParentheses()
                 is CalculatorAction.Percent -> enterPercent()
@@ -36,8 +34,9 @@ class CalculatorViewModel
         private fun enterNumber(number: Int) {
             val expression = state.value.expression
             val newExpression = actions.enterNumber.execute(expression, number)
-            _state.update { currentState ->
-                currentState.copy(expression = newExpression)
+            val newState = actions.calculate.execute(newExpression)
+            _state.update {
+                newState
             }
         }
 
@@ -66,10 +65,11 @@ class CalculatorViewModel
         }
 
         private fun delete() {
-            _state.update { currentState ->
-                currentState.copy(
-                    expression = actions.deleteLastChar.execute(currentState.expression),
-                )
+            val expression = state.value.expression
+            val newExpression = actions.deleteLastChar.execute(expression)
+            val newState = actions.calculate.execute(newExpression)
+            _state.update {
+                newState
             }
         }
 
@@ -79,16 +79,17 @@ class CalculatorViewModel
         }
 
         private fun enterPercent() {
-            viewModelScope.launch {
-                val newState = actions.enterPercent.execute(state.value.expression)
-                _state.update { newState }
+            val expression = state.value.expression
+            val newExpression = actions.enterPercent.execute(expression)
+            val calculatedState = actions.calculate.execute(newExpression)
+            _state.update {
+                actions.enterEqually.execute(calculatedState)
             }
         }
 
-        private fun calculate() {
-            viewModelScope.launch {
-                val newState = actions.calculate.execute(state.value.expression)
-                _state.update { newState }
+        private fun enterEqually() {
+            _state.update { currentState ->
+                actions.enterEqually.execute(currentState)
             }
         }
     }
@@ -106,7 +107,7 @@ sealed class CalculatorAction {
 
     data object Clear : CalculatorAction()
 
-    data object Calculate : CalculatorAction()
+    data object Equally : CalculatorAction()
 
     data object Delete : CalculatorAction()
 

@@ -5,5 +5,5 @@ import javax.inject.Inject
 class EnterDecimalUseCase
     @Inject
     constructor() {
-        fun execute(expression: String): String = "$expression,"
+        fun execute(expression: String): String = if (expression.last() == ',') expression else "$expression,"
     }

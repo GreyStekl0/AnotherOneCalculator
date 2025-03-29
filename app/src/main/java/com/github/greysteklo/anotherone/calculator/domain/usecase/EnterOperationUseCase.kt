@@ -8,5 +8,10 @@ class EnterOperationUseCase
         fun execute(
             expression: String,
             operation: String,
-        ): String = expression + operation
+        ): String =
+            if (expression.last() in "+-*/") {
+                expression.dropLast(1) + operation
+            } else {
+                expression + operation
+            }
     }

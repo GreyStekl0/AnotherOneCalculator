@@ -4,6 +4,7 @@ import com.github.greysteklo.anotherone.calculator.domain.usecase.CalculateExpre
 import com.github.greysteklo.anotherone.calculator.domain.usecase.ClearAllUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.DeleteLastCharacterUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterDecimalUseCase
+import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterEquallyUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterNumberUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterOperationUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterPercentUseCase
@@ -19,4 +20,5 @@ data class CalculatorActions
         val enterDecimal: EnterDecimalUseCase,
         val calculate: CalculateExpressionUseCase,
         val enterPercent: EnterPercentUseCase,
+        val enterEqually: EnterEquallyUseCase,
     )

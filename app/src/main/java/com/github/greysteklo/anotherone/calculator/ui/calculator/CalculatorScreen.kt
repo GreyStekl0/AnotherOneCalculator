@@ -257,7 +257,7 @@ fun CalculatorScreen(
                 )
             }
             Button(
-                onClick = { viewModel.onAction(CalculatorAction.Calculate) },
+                onClick = { viewModel.onAction(CalculatorAction.Equally) },
                 Modifier
                     .weight(1f)
                     .aspectRatio(1f)

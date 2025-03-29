@@ -11,7 +11,12 @@ class ExpressionEvaluatorImpl
     constructor() : ExpressionEvaluator {
         override fun evaluate(expression: String): Result<Double> =
             try {
-                val formattedExpression = expression.replace(",", ".")
+                val formattedExpression =
+                    if (expression.last() in "+-*/") {
+                        expression.dropLast(1).replace(",", ".")
+                    } else {
+                        expression.replace(",", ".")
+                    }
                 Result.success(ExpressionBuilder(formattedExpression).build().evaluate())
             } catch (e: IllegalArgumentException) {
                 Result.failure(e)
