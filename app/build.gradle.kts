@@ -68,3 +68,7 @@ dependencies {
 ksp {
     arg("dagger.fastInit", "enabled")
 }
+
+hilt {
+    enableAggregatingTask = true
+}
