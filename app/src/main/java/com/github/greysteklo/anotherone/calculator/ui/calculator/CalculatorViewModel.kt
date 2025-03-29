@@ -70,8 +70,10 @@ class CalculatorViewModel
         }
 
         private fun enterParentheses() {
-            // TODO: Implement parentheses logic
-            // This is a placeholder for future implementation
+            val expression = state.value.expression
+            val newExpression = actions.enterParentheses.execute(expression)
+            val newState = actions.calculate.execute(newExpression)
+            _state.update { newState }
         }
 
         private fun enterPercent() {

@@ -7,6 +7,7 @@ import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterDecimalUs
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterEquallyUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterNumberUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterOperationUseCase
+import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterParenthesesUseCase
 import com.github.greysteklo.anotherone.calculator.domain.usecase.EnterPercentUseCase
 import javax.inject.Inject
 
@@ -21,4 +22,5 @@ data class CalculatorActions
         val calculate: CalculateExpressionUseCase,
         val enterPercent: EnterPercentUseCase,
         val enterEqually: EnterEquallyUseCase,
+        val enterParentheses: EnterParenthesesUseCase,
     )
