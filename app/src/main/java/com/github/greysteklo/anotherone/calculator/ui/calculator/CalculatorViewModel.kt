@@ -80,17 +80,15 @@ class CalculatorViewModel
 
         private fun enterPercent() {
             val expression = state.value.expression
-            val newExpression = actions.enterPercent.execute(expression)
-            val calculatedState = actions.calculate.execute(newExpression)
+            val newState = actions.enterPercent.execute(expression)
             _state.update {
-                actions.enterEqually.execute(calculatedState)
+                newState
             }
         }
 
         private fun enterEqually() {
-            _state.update { currentState ->
-                actions.enterEqually.execute(currentState)
-            }
+            val newState = actions.enterEqually.execute(state.value)
+            _state.update { newState }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.github.greysteklo.anotherone.calculator.domain.usecase
 
 import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluator
+import com.github.greysteklo.anotherone.calculator.domain.valueobject.CalculatorState
 import javax.inject.Inject
 
 class EnterPercentUseCase
@@ -8,10 +9,19 @@ class EnterPercentUseCase
     constructor(
         private val expressionEvaluator: ExpressionEvaluator,
     ) {
-        fun execute(expression: String): String =
-            if (expression.last() in "+-*/") {
-                expression.dropLast(1) + "/100"
-            } else {
-                "$expression/100"
+        fun execute(expression: String): CalculatorState =
+            try {
+                expressionEvaluator.evaluate(expression).fold(
+                    onSuccess = { result ->
+                        val percentValue = result / 100.0
+                        val formattedResult = expressionEvaluator.formatResult(percentValue)
+                        CalculatorState(expression = formattedResult, result = formattedResult)
+                    },
+                    onFailure = {
+                        CalculatorState(expression = expression, result = "Error")
+                    },
+                )
+            } catch (_: Exception) {
+                CalculatorState(expression = expression, result = "Error")
             }
     }
