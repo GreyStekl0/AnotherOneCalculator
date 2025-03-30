@@ -10,6 +10,54 @@ import androidx.compose.ui.unit.sp
 import com.github.greysteklo.anotherone.calculator.R
 import com.github.greysteklo.anotherone.calculator.ui.calculator.CalculatorAction
 
+data class GridButtonData(
+    val content: ButtonContent,
+    val action: CalculatorAction,
+)
+
+private val calculatorButtonLayout: List<List<GridButtonData>> =
+    listOf(
+        listOf(
+            GridButtonData(ButtonContent(text = "AC", fontSize = 30.sp), CalculatorAction.Clear),
+            GridButtonData(
+                ButtonContent(text = "( )", fontSize = 40.sp),
+                CalculatorAction.Parentheses,
+            ),
+            GridButtonData(ButtonContent(text = "%"), CalculatorAction.Percent),
+            GridButtonData(ButtonContent(text = "/"), CalculatorAction.Operation("/")),
+        ),
+        listOf(
+            GridButtonData(ButtonContent(text = "7"), CalculatorAction.Number(7)),
+            GridButtonData(ButtonContent(text = "8"), CalculatorAction.Number(8)),
+            GridButtonData(ButtonContent(text = "9"), CalculatorAction.Number(9)),
+            GridButtonData(ButtonContent(text = "X"), CalculatorAction.Operation("*")),
+        ),
+        listOf(
+            GridButtonData(ButtonContent(text = "4"), CalculatorAction.Number(4)),
+            GridButtonData(ButtonContent(text = "5"), CalculatorAction.Number(5)),
+            GridButtonData(ButtonContent(text = "6"), CalculatorAction.Number(6)),
+            GridButtonData(ButtonContent(text = "-"), CalculatorAction.Operation("-")),
+        ),
+        listOf(
+            GridButtonData(ButtonContent(text = "1"), CalculatorAction.Number(1)),
+            GridButtonData(ButtonContent(text = "2"), CalculatorAction.Number(2)),
+            GridButtonData(ButtonContent(text = "3"), CalculatorAction.Number(3)),
+            GridButtonData(ButtonContent(text = "+"), CalculatorAction.Operation("+")),
+        ),
+        listOf(
+            GridButtonData(ButtonContent(text = "0"), CalculatorAction.Number(0)),
+            GridButtonData(ButtonContent(text = ","), CalculatorAction.Decimal),
+            GridButtonData(
+                ButtonContent(
+                    iconResId = R.drawable.backspace,
+                    contentDescription = "Delete",
+                ),
+                CalculatorAction.Delete,
+            ),
+            GridButtonData(ButtonContent(text = "="), CalculatorAction.Equally),
+        ),
+    )
+
 typealias OnCalculatorAction = (CalculatorAction) -> Unit
 
 @Composable
@@ -18,114 +66,20 @@ fun CalculatorButtonGrid(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Clear) },
-                content = ButtonContent(text = "AC", fontSize = 30.sp),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Parentheses) },
-                content = ButtonContent(text = "( )", fontSize = 40.sp),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Percent) },
-                content = ButtonContent(text = "%"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Operation("/")) },
-                content = ButtonContent(text = "/"),
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Number(7)) },
-                content = ButtonContent(text = "7"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Number(8)) },
-                content = ButtonContent(text = "8"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Number(9)) },
-                content = ButtonContent(text = "9"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Operation("*")) },
-                content = ButtonContent(text = "X"),
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Number(4)) },
-                content = ButtonContent(text = "4"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Number(5)) },
-                content = ButtonContent(text = "5"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Number(6)) },
-                content = ButtonContent(text = "6"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Operation("-")) },
-                content = ButtonContent(text = "-"),
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Number(6)) },
-                content = ButtonContent(text = "1"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Number(6)) },
-                content = ButtonContent(text = "2"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Number(6)) },
-                content = ButtonContent(text = "3"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Operation("+")) },
-                content = ButtonContent(text = "+"),
-            )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Number(0)) },
-                content = ButtonContent(text = "0"),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Decimal) },
-                content = ButtonContent(text = ","),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Delete) },
-                content =
-                    ButtonContent(
-                        iconResId = R.drawable.backspace,
-                        contentDescription = "Delete", // Можно переопределить описание
-                    ),
-            )
-            CalculatorButton(
-                onClick = { onAction(CalculatorAction.Equally) },
-                content = ButtonContent(text = "="),
-            )
+        calculatorButtonLayout.forEach { rowButtons ->
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                rowButtons.forEach { buttonData ->
+                    CalculatorButton(
+                        onClick = { onAction(buttonData.action) },
+                        content = buttonData.content,
+                    )
+                }
+            }
         }
     }
 }
