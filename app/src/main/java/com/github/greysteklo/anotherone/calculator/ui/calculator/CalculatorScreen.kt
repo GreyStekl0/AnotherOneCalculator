@@ -2,6 +2,7 @@ package com.github.greysteklo.anotherone.calculator.ui.calculator
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -43,6 +44,7 @@ fun CalculatorScreen(
         CalculatorButtonGrid(
             onAction = viewModel::onAction,
         )
+        Spacer(modifier = Modifier.padding(2.dp))
     }
 }
 
@@ -67,6 +69,7 @@ private fun CalculatorScreenPreview() {
                         .padding(bottom = 16.dp),
             )
             CalculatorButtonGrid(onAction = {})
+            Spacer(modifier = Modifier.padding(2.dp))
         }
     }
 }
