@@ -51,6 +51,7 @@ class ExpressionEvaluatorImpl
             } else {
                 String
                     .format(Locale.US, "%.12f", result)
+                    .replace("0*$".toRegex(), "")
                     .replace(".", ",")
             }
     }
