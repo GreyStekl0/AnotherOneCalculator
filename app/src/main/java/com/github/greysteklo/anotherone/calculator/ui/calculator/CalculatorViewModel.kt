@@ -51,9 +51,10 @@ class CalculatorViewModel
         }
 
         private fun enterDecimal() {
-            _state.update { currentState ->
-                currentState.copy(expression = actions.enterDecimal.execute(currentState.expression))
-            }
+            val expression = state.value.expression
+            val newExpression = actions.enterDecimal.execute(expression)
+            val newState = actions.calculate.execute(newExpression)
+            _state.update { newState }
         }
 
         private fun clearAll() {
