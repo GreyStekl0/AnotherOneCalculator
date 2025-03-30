@@ -4,6 +4,7 @@ import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEval
 import net.objecthunter.exp4j.ExpressionBuilder
 import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
 import java.util.EmptyStackException
+import java.util.Locale
 import javax.inject.Inject
 
 class ExpressionEvaluatorImpl
@@ -48,6 +49,8 @@ class ExpressionEvaluatorImpl
             if (result == result.toLong().toDouble()) {
                 result.toLong().toString()
             } else {
-                result.toString().replace(".", ",")
+                String
+                    .format(Locale.US, "%.12f", result)
+                    .replace(".", ",")
             }
     }
