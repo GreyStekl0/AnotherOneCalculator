@@ -4,10 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,14 +26,14 @@ fun CalculatorDisplay(
             text = expression,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 80.sp,
         )
         Text(
             text = "= $result",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 40.sp,
         )
     }
