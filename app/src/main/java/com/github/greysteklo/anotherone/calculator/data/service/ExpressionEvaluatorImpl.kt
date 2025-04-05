@@ -30,7 +30,7 @@ class ExpressionEvaluatorImpl
             }
 
         private fun prepareExpressionForEvaluation(expression: String): String {
-            var formatted = expression.replace(",", ".")
+            var formatted = expression.replace(",", ".").replace("÷", "/").replace("×", "*")
 
             while (formatted.isNotEmpty() && formatted.last() in "+-*/(") {
                 formatted = formatted.dropLast(1)

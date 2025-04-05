@@ -39,7 +39,7 @@ fun RowScope.CalculatorButton(
                 painter = painterResource(content.iconResId),
                 contentDescription = content.contentDescription,
                 colorFilter = ColorFilter.tint(ButtonDefaults.buttonColors().contentColor),
-                modifier = Modifier.size(45.dp),
+                modifier = Modifier.size(content.imageSize),
             )
         }
     }
