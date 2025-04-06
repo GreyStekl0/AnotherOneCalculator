@@ -24,7 +24,7 @@ fun CalculatorDisplay(
             expressionBaseSize.sp
         } else {
             val newSize = expressionBaseSize - (expression.length - 7) * 7
-            maxOf(20, newSize).sp
+            maxOf(40, newSize).sp
         }
     val resultBaseSize = 40
     val resultFontSize =
@@ -32,7 +32,7 @@ fun CalculatorDisplay(
             resultBaseSize.sp
         } else {
             val newSize = resultBaseSize - (expression.length - 7) * 7
-            maxOf(10, newSize).sp
+            maxOf(20, newSize).sp
         }
 
     Column(
@@ -45,6 +45,7 @@ fun CalculatorDisplay(
             textAlign = TextAlign.End,
             color = MaterialTheme.colorScheme.onSurface,
             fontSize = expressionFontSize,
+            lineHeight = expressionFontSize * 1.2,
         )
         Text(
             text = "= $result",

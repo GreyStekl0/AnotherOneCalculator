@@ -26,7 +26,7 @@ fun RowScope.CalculatorButton(
             modifier
                 .weight(1f)
                 .aspectRatio(1f)
-                .padding(2.dp),
+                .padding(4.dp),
     ) {
         if (content.text != null) {
             Text(
