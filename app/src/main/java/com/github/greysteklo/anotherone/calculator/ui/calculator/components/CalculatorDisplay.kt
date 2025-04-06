@@ -18,6 +18,23 @@ fun CalculatorDisplay(
     result: String,
     modifier: Modifier = Modifier,
 ) {
+    val expressionBaseSize = 80
+    val expressionFontSize =
+        if (expression.length <= 7) {
+            expressionBaseSize.sp
+        } else {
+            val newSize = expressionBaseSize - (expression.length - 7) * 7
+            maxOf(20, newSize).sp
+        }
+    val resultBaseSize = 40
+    val resultFontSize =
+        if (expression.length <= 7) {
+            resultBaseSize.sp
+        } else {
+            val newSize = resultBaseSize - (expression.length - 7) * 7
+            maxOf(10, newSize).sp
+        }
+
     Column(
         modifier = modifier.padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.Bottom,
@@ -27,14 +44,14 @@ fun CalculatorDisplay(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End,
             color = MaterialTheme.colorScheme.onSurface,
-            fontSize = 80.sp,
+            fontSize = expressionFontSize,
         )
         Text(
             text = "= $result",
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.End,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 40.sp,
+            fontSize = resultFontSize,
         )
     }
 }
