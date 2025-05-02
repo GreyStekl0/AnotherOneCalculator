@@ -4,6 +4,8 @@ import com.ezylang.evalex.Expression
 import com.ezylang.evalex.config.ExpressionConfiguration
 import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluator
 import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 import java.util.Locale
 import javax.inject.Inject
 
@@ -13,7 +15,7 @@ class ExpressionEvaluatorImpl
         val config: ExpressionConfiguration =
             ExpressionConfiguration
                 .builder()
-                .decimalPlacesRounding(12) // округление до 12 знаков
+                .mathContext(MathContext(12, RoundingMode.HALF_UP)) // округление до 12 знаков
                 .stripTrailingZeros(true) // убираем лишние нули
                 .implicitMultiplicationAllowed(true) // разрешаем 2x
                 .locale(Locale("ru"))
