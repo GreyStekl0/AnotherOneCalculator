@@ -42,6 +42,8 @@ android {
 }
 
 dependencies {
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
     implementation(libs.evalex)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.android)
