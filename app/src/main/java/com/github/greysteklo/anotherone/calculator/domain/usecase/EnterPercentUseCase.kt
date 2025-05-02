@@ -2,6 +2,7 @@ package com.github.greysteklo.anotherone.calculator.domain.usecase
 
 import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluator
 import com.github.greysteklo.anotherone.calculator.domain.valueobject.CalculatorState
+import java.math.BigDecimal
 import javax.inject.Inject
 
 class EnterPercentUseCase
@@ -13,7 +14,7 @@ class EnterPercentUseCase
             try {
                 expressionEvaluator.evaluate(expression).fold(
                     onSuccess = { result ->
-                        val percentValue = result / 100.0
+                        val percentValue = result.divide(BigDecimal(100))
                         val formattedResult = expressionEvaluator.formatResult(percentValue)
                         CalculatorState(expression = formattedResult, result = formattedResult)
                     },
