@@ -1,7 +1,9 @@
 package com.github.greysteklo.anotherone.calculator.domain.service
 
-interface ExpressionEvaluator {
-    fun evaluate(expression: String): Result<Double>
+import java.math.BigDecimal
 
-    fun formatResult(result: Double): String
+interface ExpressionEvaluator {
+    fun evaluate(expression: String): Result<BigDecimal>
+
+    fun formatResult(result: BigDecimal): String
 }
