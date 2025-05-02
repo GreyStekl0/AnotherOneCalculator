@@ -3,9 +3,7 @@ package com.github.greysteklo.anotherone.calculator.data.service
 import com.ezylang.evalex.Expression
 import com.ezylang.evalex.config.ExpressionConfiguration
 import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluator
-import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException
 import java.math.BigDecimal
-import java.util.EmptyStackException
 import java.util.Locale
 import javax.inject.Inject
 
@@ -30,13 +28,7 @@ class ExpressionEvaluatorImpl
                     val resultValue = Expression(preparedExpression, config).evaluate().numberValue
                     Result.success(resultValue)
                 }
-            } catch (e: IllegalArgumentException) {
-                Result.failure(e)
-            } catch (e: ArithmeticException) {
-                Result.failure(e)
-            } catch (e: EmptyStackException) {
-                Result.failure(e)
-            } catch (e: UnknownFunctionOrVariableException) {
+            } catch (e: Exception) {
                 Result.failure(e)
             }
 
