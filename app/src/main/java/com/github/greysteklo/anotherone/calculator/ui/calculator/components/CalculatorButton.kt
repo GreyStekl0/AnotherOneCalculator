@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -19,6 +21,8 @@ fun RowScope.CalculatorButton(
     onClick: () -> Unit,
     content: ButtonContent,
     modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
 ) {
     Button(
         onClick = onClick,
@@ -27,6 +31,11 @@ fun RowScope.CalculatorButton(
                 .weight(1f)
                 .aspectRatio(1f)
                 .padding(4.dp),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = containerColor,
+                contentColor = contentColor,
+            ),
     ) {
         if (content.text != null) {
             Text(
@@ -38,7 +47,7 @@ fun RowScope.CalculatorButton(
             Image(
                 painter = painterResource(content.iconResId),
                 contentDescription = content.contentDescription,
-                colorFilter = ColorFilter.tint(ButtonDefaults.buttonColors().contentColor),
+                colorFilter = ColorFilter.tint(contentColor),
                 modifier = Modifier.size(content.imageSize),
             )
         }
