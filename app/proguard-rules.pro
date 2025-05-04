@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+# --- EvalEx ---
+# Сохраняем классы библиотеки EvalEx.
+-keep class com.ezylang.evalex.** { *; }

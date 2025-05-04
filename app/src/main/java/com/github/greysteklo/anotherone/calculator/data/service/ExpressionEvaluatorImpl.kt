@@ -15,9 +15,9 @@ class ExpressionEvaluatorImpl
         val config: ExpressionConfiguration =
             ExpressionConfiguration
                 .builder()
-                .mathContext(MathContext(12, RoundingMode.HALF_UP)) // округление до 12 знаков
-                .stripTrailingZeros(true) // убираем лишние нули
-                .implicitMultiplicationAllowed(true) // разрешаем 2x
+                .mathContext(MathContext(12, RoundingMode.HALF_UP))
+                .stripTrailingZeros(true)
+                .implicitMultiplicationAllowed(true)
                 .locale(Locale("ru"))
                 .build()
 
