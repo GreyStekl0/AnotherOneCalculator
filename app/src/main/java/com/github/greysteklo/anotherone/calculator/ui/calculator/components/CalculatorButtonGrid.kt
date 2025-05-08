@@ -77,7 +77,7 @@ private fun getCalculatorButtonLayout(): List<List<GridButtonData>> {
             GridButtonData(
                 ButtonContent(text = "7"),
                 CalculatorAction.Number(7),
-            ), // Использует цвета по умолчанию
+            ),
             GridButtonData(ButtonContent(text = "8"), CalculatorAction.Number(8)),
             GridButtonData(ButtonContent(text = "9"), CalculatorAction.Number(9)),
             GridButtonData(
