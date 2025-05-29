@@ -28,7 +28,7 @@ fun CalculatorScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .padding(start = 8.dp, end = 8.dp),
+                .padding(start = 8.dp, end = 8.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -44,7 +44,6 @@ fun CalculatorScreen(
         CalculatorButtonGrid(
             onAction = viewModel::onAction,
         )
-        Spacer(modifier = Modifier.padding(2.dp))
     }
 }
 
