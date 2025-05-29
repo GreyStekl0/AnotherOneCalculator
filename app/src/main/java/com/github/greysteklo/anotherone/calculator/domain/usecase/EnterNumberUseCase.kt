@@ -20,7 +20,7 @@ class EnterNumberUseCase
     }
 
 private fun isLastNumberInteger(expression: String): Boolean {
-    if (expression.length <= 2 || expression.takeLast(3).any { it in "+-×÷ " }) {
+    if (expression.length < 3 || expression.takeLast(3).any { it in "+-×÷ " }) {
         return false
     }
     val regex = """([\d,]+)$""".toRegex()
