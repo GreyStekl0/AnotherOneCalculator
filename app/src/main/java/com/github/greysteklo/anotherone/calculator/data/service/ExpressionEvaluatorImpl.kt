@@ -6,7 +6,6 @@ import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEval
 import java.math.BigDecimal
 import java.math.MathContext
 import java.math.RoundingMode
-import java.util.Locale
 import javax.inject.Inject
 
 class ExpressionEvaluatorImpl
@@ -18,7 +17,6 @@ class ExpressionEvaluatorImpl
                 .mathContext(MathContext(12, RoundingMode.HALF_UP))
                 .stripTrailingZeros(true)
                 .implicitMultiplicationAllowed(true)
-                .locale(Locale("ru"))
                 .build()
 
         override fun evaluate(expression: String): Result<BigDecimal> =
@@ -50,5 +48,5 @@ class ExpressionEvaluatorImpl
             return formatted
         }
 
-        override fun formatResult(result: BigDecimal): String = result.toString()
+        override fun formatResult(result: BigDecimal): String = result.toString().replace(".", ",")
     }
