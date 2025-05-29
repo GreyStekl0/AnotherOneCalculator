@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,9 @@ fun CalculatorDisplay(
             val newSize = resultBaseSize - (expression.length - 7) * 7
             maxOf(20, newSize).sp
         }
+    LaunchedEffect(expression) {
+        scrollState.scrollTo(scrollState.maxValue)
+    }
 
     Column(
         modifier = modifier.padding(horizontal = 8.dp),
