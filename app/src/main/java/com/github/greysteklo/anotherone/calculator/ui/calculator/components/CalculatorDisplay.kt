@@ -23,7 +23,8 @@ fun CalculatorDisplay(
     result: String,
     modifier: Modifier = Modifier,
 ) {
-    val scrollState = rememberScrollState()
+    val scrollStateExpression = rememberScrollState()
+    val scrollStateResult = rememberScrollState()
     val expressionBaseSize = 80
     val expressionFontSize =
         if (expression.length <= 7) {
@@ -41,7 +42,7 @@ fun CalculatorDisplay(
             maxOf(20, newSize).sp
         }
     LaunchedEffect(expression) {
-        scrollState.scrollTo(scrollState.maxValue)
+        scrollStateExpression.scrollTo(scrollStateExpression.maxValue)
     }
 
     Column(
@@ -56,7 +57,7 @@ fun CalculatorDisplay(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .horizontalScroll(scrollState),
+                        .horizontalScroll(scrollStateExpression),
                 textAlign = TextAlign.End,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontSize = expressionFontSize,
@@ -66,10 +67,14 @@ fun CalculatorDisplay(
         }
         Text(
             text = "= $result",
-            modifier = Modifier.fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(scrollStateResult),
             textAlign = TextAlign.End,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = resultFontSize,
+            softWrap = false,
         )
     }
 }
