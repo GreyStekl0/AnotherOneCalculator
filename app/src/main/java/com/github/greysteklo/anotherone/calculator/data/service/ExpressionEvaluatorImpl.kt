@@ -5,7 +5,8 @@ import com.ezylang.evalex.config.ExpressionConfiguration
 import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluator
 import java.math.BigDecimal
 import java.math.MathContext
-import java.math.RoundingMode
+import java.text.NumberFormat
+import java.util.Locale
 import javax.inject.Inject
 
 class ExpressionEvaluatorImpl
@@ -14,7 +15,7 @@ class ExpressionEvaluatorImpl
         val config: ExpressionConfiguration =
             ExpressionConfiguration
                 .builder()
-                .mathContext(MathContext(12, RoundingMode.HALF_UP))
+                .mathContext(MathContext.DECIMAL128)
                 .stripTrailingZeros(true)
                 .implicitMultiplicationAllowed(true)
                 .build()
@@ -33,7 +34,12 @@ class ExpressionEvaluatorImpl
             }
 
         private fun prepareExpressionForEvaluation(expression: String): String {
-            var formatted = expression.replace(",", ".").replace("÷", "/").replace("×", "*")
+            var formatted =
+                expression
+                    .replace(",", ".")
+                    .replace("÷", "/")
+                    .replace("×", "*")
+                    .replace(" ", "")
 
             while (formatted.isNotEmpty() && formatted.last() in "+-*/(") {
                 formatted = formatted.dropLast(1)
@@ -48,5 +54,8 @@ class ExpressionEvaluatorImpl
             return formatted
         }
 
-        override fun formatResult(result: BigDecimal): String = result.toString().replace(".", ",")
+        override fun formatResult(result: BigDecimal): String {
+            val numberFormat = NumberFormat.getNumberInstance(Locale("ru", "RU"))
+            return numberFormat.format(result)
+        }
     }

@@ -8,5 +8,26 @@ class EnterNumberUseCase
         fun execute(
             expression: String,
             number: Int,
-        ): String = if (expression == "0") number.toString() else expression + number.toString()
+        ): String {
+            return if (expression == "0") {
+                number.toString()
+            } else if (isLastNumberInteger(expression)) {
+                "$expression $number"
+            } else {
+                return expression + number.toString()
+            }
+        }
     }
+
+private fun isLastNumberInteger(expression: String): Boolean {
+    if (expression.length <= 2 || expression.takeLast(3).any { it in "+-×÷ " }) {
+        return false
+    }
+    val regex = """([\d,]+)$""".toRegex()
+    val matchResult = regex.find(expression)
+
+    return matchResult?.let {
+        val lastNumberStr = it.groupValues[1]
+        !lastNumberStr.contains(',')
+    } == true
+}
