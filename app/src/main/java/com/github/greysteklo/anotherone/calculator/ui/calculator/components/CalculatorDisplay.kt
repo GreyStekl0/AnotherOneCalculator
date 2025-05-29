@@ -1,12 +1,16 @@
 package com.github.greysteklo.anotherone.calculator.ui.calculator.components
 
+import androidx.compose.foundation.LocalOverscrollFactory
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -18,6 +22,7 @@ fun CalculatorDisplay(
     result: String,
     modifier: Modifier = Modifier,
 ) {
+    val scrollState = rememberScrollState()
     val expressionBaseSize = 80
     val expressionFontSize =
         if (expression.length <= 7) {
@@ -39,14 +44,22 @@ fun CalculatorDisplay(
         modifier = modifier.padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.Bottom,
     ) {
-        Text(
-            text = expression,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.End,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontSize = expressionFontSize,
-            lineHeight = expressionFontSize * 1.2,
-        )
+        CompositionLocalProvider(
+            LocalOverscrollFactory provides null,
+        ) {
+            Text(
+                text = expression,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(scrollState),
+                textAlign = TextAlign.End,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = expressionFontSize,
+                lineHeight = expressionFontSize * 1.2,
+                softWrap = false,
+            )
+        }
         Text(
             text = "= $result",
             modifier = Modifier.fillMaxWidth(),
