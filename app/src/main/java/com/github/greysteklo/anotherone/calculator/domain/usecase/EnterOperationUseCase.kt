@@ -9,7 +9,7 @@ class EnterOperationUseCase
             expression: String,
             operation: String,
         ): String =
-            if (expression.last() in "+-*/") {
+            if (expression.last() in "+-×÷") {
                 expression.dropLast(1) + operation
             } else {
                 expression + operation
