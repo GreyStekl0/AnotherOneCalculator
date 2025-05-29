@@ -41,8 +41,9 @@ fun CalculatorDisplay(
             val newSize = resultBaseSize - (expression.length - 7) * 7
             maxOf(20, newSize).sp
         }
-    LaunchedEffect(expression) {
+    LaunchedEffect(expression, result) {
         scrollStateExpression.scrollTo(scrollStateExpression.maxValue)
+        scrollStateResult.scrollTo(scrollStateResult.maxValue)
     }
 
     Column(
