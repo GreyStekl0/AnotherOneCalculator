@@ -12,20 +12,23 @@ class EnterNumberUseCase
         fun execute(
             expression: String,
             number: Int,
-        ): String {
-            return if (expression == "0") {
+        ): String =
+            if (expression == "0") {
                 number.toString()
-            } else if (getLastNumber(expression + number) != null) {
-                var newExpression = (expression + number).replace(Regex("\\s+"), "").toBigDecimal()
-                numberFormat.format(newExpression)
             } else {
-                return expression + number.toString()
+                val lastNumber = getLastNumber(expression)
+                if (lastNumber != null) {
+                    val prefix = expression.dropLast(lastNumber.length)
+                    val newLastNumber = (lastNumber + number).replace(Regex("\\s+"), "").toBigDecimal()
+                    prefix + numberFormat.format(newLastNumber)
+                } else {
+                    expression + number.toString()
+                }
             }
-        }
     }
 
 private fun getLastNumber(expression: String): String? {
-    val regex = """(\d{1,3}(?: \d{3})*)$""".toRegex()
+    val regex = """(\d{1,3}(?:\s\d{3})*)$""".toRegex()
     val matchResult = regex.find(expression)
     return matchResult?.groupValues?.get(1)
 }
