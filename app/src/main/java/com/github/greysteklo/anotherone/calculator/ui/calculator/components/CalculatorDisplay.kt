@@ -65,17 +65,17 @@ fun CalculatorDisplay(
                 lineHeight = expressionFontSize * 1.2,
                 softWrap = false,
             )
+            Text(
+                text = "= $result",
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(scrollStateResult),
+                textAlign = TextAlign.End,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = resultFontSize,
+                softWrap = false,
+            )
         }
-        Text(
-            text = "= $result",
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(scrollStateResult),
-            textAlign = TextAlign.End,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = resultFontSize,
-            softWrap = false,
-        )
     }
 }
