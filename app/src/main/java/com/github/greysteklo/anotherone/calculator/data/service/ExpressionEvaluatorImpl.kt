@@ -39,7 +39,7 @@ class ExpressionEvaluatorImpl
                     .replace(",", ".")
                     .replace("÷", "/")
                     .replace("×", "*")
-                    .replace(" ", "")
+                    .replace(Regex("\\s+"), "")
 
             while (formatted.isNotEmpty() && formatted.last() in "+-*/(") {
                 formatted = formatted.dropLast(1)

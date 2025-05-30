@@ -1,33 +1,31 @@
 package com.github.greysteklo.anotherone.calculator.domain.usecase
 
+import java.text.NumberFormat
+import java.util.Locale
 import javax.inject.Inject
 
 class EnterNumberUseCase
     @Inject
     constructor() {
+        val numberFormat: NumberFormat = NumberFormat.getNumberInstance(Locale("ru", "RU"))
+
         fun execute(
             expression: String,
             number: Int,
         ): String {
             return if (expression == "0") {
                 number.toString()
-            } else if (isLastNumberInteger(expression)) {
-                "$expression $number"
+            } else if (getLastNumber(expression + number) != null) {
+                var newExpression = (expression + number).replace(Regex("\\s+"), "").toBigDecimal()
+                numberFormat.format(newExpression)
             } else {
                 return expression + number.toString()
             }
         }
     }
 
-private fun isLastNumberInteger(expression: String): Boolean {
-    if (expression.length < 3 || expression.takeLast(3).any { it in "+-×÷ " }) {
-        return false
-    }
-    val regex = """([\d,]+)$""".toRegex()
+private fun getLastNumber(expression: String): String? {
+    val regex = """(\d{1,3}(?: \d{3})*)$""".toRegex()
     val matchResult = regex.find(expression)
-
-    return matchResult?.let {
-        val lastNumberStr = it.groupValues[1]
-        !lastNumberStr.contains(',')
-    } == true
+    return matchResult?.groupValues?.get(1)
 }
