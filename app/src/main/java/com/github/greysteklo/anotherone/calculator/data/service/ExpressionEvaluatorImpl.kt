@@ -55,7 +55,11 @@ class ExpressionEvaluatorImpl
         }
 
         override fun formatResult(result: BigDecimal): String {
+            val scale = result.scale()
+            val fractionDigits = if (scale < 0) 0 else scale
             val numberFormat = NumberFormat.getNumberInstance(Locale("ru", "RU"))
+            numberFormat.maximumFractionDigits = fractionDigits
+            numberFormat.minimumFractionDigits = fractionDigits
             return numberFormat.format(result)
         }
     }
