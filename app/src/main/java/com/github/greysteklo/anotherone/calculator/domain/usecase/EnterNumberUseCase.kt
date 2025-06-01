@@ -19,15 +19,15 @@ class EnterNumberUseCase
             val prefix = expression.dropLast(lastNumber.length)
 
             val appended = lastNumber + number
-            val bd =
+            val newLastNumber =
                 appended
                     .replace(Regex("\\s+"), "")
                     .replace(",", ".")
                     .toBigDecimal()
 
-            numberFormat.minimumFractionDigits = bd.scale()
-            numberFormat.maximumFractionDigits = bd.scale()
+            numberFormat.minimumFractionDigits = newLastNumber.scale()
+            numberFormat.maximumFractionDigits = newLastNumber.scale()
 
-            return prefix + numberFormat.format(bd)
+            return prefix + numberFormat.format(newLastNumber)
         }
     }

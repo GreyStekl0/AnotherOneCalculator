@@ -24,6 +24,10 @@ class DeleteLastCharacterUseCase
                             .replace(Regex("\\s+"), "")
                             .replace(",", ".")
                             .toBigDecimal()
+
+                    numberFormat.minimumFractionDigits = newLastNumber.scale()
+                    numberFormat.maximumFractionDigits = newLastNumber.scale()
+
                     prefix + numberFormat.format(newLastNumber)
                 }
             }

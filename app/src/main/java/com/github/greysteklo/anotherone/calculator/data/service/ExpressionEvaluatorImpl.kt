@@ -6,12 +6,13 @@ import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEval
 import java.math.BigDecimal
 import java.math.MathContext
 import java.text.NumberFormat
-import java.util.Locale
 import javax.inject.Inject
 
 class ExpressionEvaluatorImpl
     @Inject
-    constructor() : ExpressionEvaluator {
+    constructor(
+        private val numberFormat: NumberFormat,
+    ) : ExpressionEvaluator {
         val config: ExpressionConfiguration =
             ExpressionConfiguration
                 .builder()
@@ -57,7 +58,6 @@ class ExpressionEvaluatorImpl
         override fun formatResult(result: BigDecimal): String {
             val scale = result.scale()
             val fractionDigits = if (scale < 0) 0 else scale
-            val numberFormat = NumberFormat.getNumberInstance(Locale("ru", "RU"))
             numberFormat.maximumFractionDigits = fractionDigits
             numberFormat.minimumFractionDigits = fractionDigits
             return numberFormat.format(result)
