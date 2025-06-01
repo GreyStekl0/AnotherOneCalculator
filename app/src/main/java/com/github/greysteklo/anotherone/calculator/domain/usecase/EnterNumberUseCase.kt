@@ -1,41 +1,33 @@
 package com.github.greysteklo.anotherone.calculator.domain.usecase
 
+import com.github.greysteklo.anotherone.calculator.domain.util.getLastNumber
 import java.text.NumberFormat
-import java.util.Locale
 import javax.inject.Inject
 
 class EnterNumberUseCase
     @Inject
-    constructor() {
-        val numberFormat: NumberFormat =
-            NumberFormat
-                .getNumberInstance(Locale("ru", "RU"))
-                .apply { maximumFractionDigits = Int.MAX_VALUE }
-
+    constructor(
+        private val numberFormat: NumberFormat,
+    ) {
         fun execute(
             expression: String,
             number: Int,
-        ): String =
-            if (expression == "0") {
-                number.toString()
-            } else {
-                val lastNumber = getLastNumber(expression)
-                if (lastNumber != null) {
-                    val prefix = expression.dropLast(lastNumber.length)
-                    val newLastNumber =
-                        (lastNumber + number)
-                            .replace(Regex("\\s+"), "")
-                            .replace(",", ".")
-                            .toBigDecimal()
-                    prefix + numberFormat.format(newLastNumber)
-                } else {
-                    expression + number.toString()
-                }
-            }
-    }
+        ): String {
+            if (expression == "0") return number.toString()
 
-private fun getLastNumber(expression: String): String? {
-    val regex = """(\d{1,3}(?:\s\d{3})*(?:,\d+)?)$""".toRegex()
-    val matchResult = regex.find(expression)
-    return matchResult?.groupValues?.get(1)
-}
+            val lastNumber = getLastNumber(expression) ?: return expression + number
+            val prefix = expression.dropLast(lastNumber.length)
+
+            val appended = lastNumber + number
+            val bd =
+                appended
+                    .replace(Regex("\\s+"), "")
+                    .replace(",", ".")
+                    .toBigDecimal()
+
+            numberFormat.minimumFractionDigits = bd.scale()
+            numberFormat.maximumFractionDigits = bd.scale()
+
+            return prefix + numberFormat.format(bd)
+        }
+    }

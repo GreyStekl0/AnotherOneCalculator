@@ -1,9 +1,30 @@
 package com.github.greysteklo.anotherone.calculator.domain.usecase
 
+import com.github.greysteklo.anotherone.calculator.domain.util.getLastNumber
+import java.text.NumberFormat
 import javax.inject.Inject
 
 class DeleteLastCharacterUseCase
     @Inject
-    constructor() {
-        fun execute(expression: String): String = if (expression.length <= 1) "0" else expression.dropLast(1)
+    constructor(
+        private val numberFormat: NumberFormat,
+    ) {
+        fun execute(expression: String): String =
+            if (expression.length <= 1) {
+                "0"
+            } else {
+                val lastNumber = getLastNumber(expression)
+                if (lastNumber != null) {
+                    val prefix = expression.dropLast(lastNumber.length)
+                    val newLastNumber =
+                        lastNumber
+                            .dropLast(1)
+                            .replace(Regex("\\s+"), "")
+                            .replace(",", ".")
+                            .toBigDecimal()
+                    prefix + numberFormat.format(newLastNumber)
+                } else {
+                    expression.dropLast(1)
+                }
+            }
     }
