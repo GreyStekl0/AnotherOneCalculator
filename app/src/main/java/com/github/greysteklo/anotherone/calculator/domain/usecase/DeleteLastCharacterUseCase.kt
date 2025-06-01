@@ -14,7 +14,9 @@ class DeleteLastCharacterUseCase
                 "0"
             } else {
                 val lastNumber = getLastNumber(expression)
-                if (lastNumber != null) {
+                if (lastNumber == null || lastNumber.length == 1) {
+                    expression.dropLast(1)
+                } else {
                     val prefix = expression.dropLast(lastNumber.length)
                     val newLastNumber =
                         lastNumber
@@ -23,8 +25,6 @@ class DeleteLastCharacterUseCase
                             .replace(",", ".")
                             .toBigDecimal()
                     prefix + numberFormat.format(newLastNumber)
-                } else {
-                    expression.dropLast(1)
                 }
             }
     }
