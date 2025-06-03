@@ -7,8 +7,12 @@ class EnterEquallyUseCase
     @Inject
     constructor() {
         fun execute(calculatorState: CalculatorState): CalculatorState =
-            CalculatorState(
-                expression = calculatorState.result,
-                result = calculatorState.result,
-            )
+            if (calculatorState.result != "Error") {
+                CalculatorState(
+                    expression = calculatorState.result,
+                    result = calculatorState.result,
+                )
+            } else {
+                calculatorState
+            }
     }
