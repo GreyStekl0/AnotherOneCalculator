@@ -1,7 +1,10 @@
 package com.github.greysteklo.anotherone.calculator.data.service
 
+import com.ezylang.evalex.EvaluationException
 import com.ezylang.evalex.Expression
 import com.ezylang.evalex.config.ExpressionConfiguration
+import com.ezylang.evalex.parser.ParseException
+import com.github.greysteklo.anotherone.calculator.domain.service.EvaluationError
 import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluator
 import java.math.BigDecimal
 import java.math.MathContext
@@ -31,7 +34,13 @@ class ExpressionEvaluatorImpl
                     Result.success(resultValue)
                 }
             } catch (e: Exception) {
-                Result.failure(e)
+                val error =
+                    when (e) {
+                        is ParseException -> EvaluationError.InvalidExpression(e)
+                        is EvaluationException -> EvaluationError.CalculationError(e)
+                        else -> EvaluationError.UnknownError(e)
+                    }
+                Result.failure(error)
             }
 
         private fun prepareExpressionForEvaluation(expression: String): String {
