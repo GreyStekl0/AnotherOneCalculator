@@ -1,5 +1,6 @@
 package com.github.greysteklo.anotherone.calculator.data.service
 
+import android.util.Log
 import com.ezylang.evalex.EvaluationException
 import com.ezylang.evalex.Expression
 import com.ezylang.evalex.config.ExpressionConfiguration
@@ -40,6 +41,7 @@ class ExpressionEvaluatorImpl
                         is EvaluationException -> EvaluationError.CalculationError(e)
                         else -> EvaluationError.UnknownError(e)
                     }
+                Log.e("ExpressionEvaluatorImpl", "error in evaluate: $error")
                 Result.failure(error)
             }
 
