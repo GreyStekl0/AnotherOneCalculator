@@ -1,8 +1,13 @@
 package com.github.greysteklo.anotherone.calculator.data.service
 
+import android.util.Log
 import com.ezylang.evalex.EvaluationException
 import com.github.greysteklo.anotherone.calculator.domain.service.EvaluationError
 import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluator
+import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -21,6 +26,14 @@ class ExpressionEvaluatorImplTest {
                 .getNumberInstance(Locale("ru", "RU"))
                 .apply { maximumFractionDigits = Int.MAX_VALUE }
         expressionEvaluator = ExpressionEvaluatorImpl(numberFormat)
+
+        mockkStatic(Log::class)
+        every { Log.e(any(), any()) } returns 0
+    }
+
+    @AfterEach
+    fun tearDown() {
+        unmockkStatic(Log::class)
     }
 
     @Test
