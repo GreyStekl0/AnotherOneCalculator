@@ -13,9 +13,9 @@ class ClearAllUseCaseTest {
     }
 
     @Test
-    fun `execute returns CalculatorState with empty expression and result`() {
+    fun `execute returns CalculatorState with zero expression and result`() {
         val calculatorState = clearAllUseCase.execute()
-        assertEquals("", calculatorState.expression)
-        assertEquals("", calculatorState.result)
+        assertEquals("0", calculatorState.expression)
+        assertEquals("0", calculatorState.result)
     }
 }
