@@ -7,12 +7,12 @@ class EnterDecimalUseCase
     constructor() {
         fun execute(expression: String): String {
             val lastChar = expression.last()
-            if (lastChar == ',' || lastChar in "+-*/") {
+            if (lastChar == ',' || lastChar in "+-×÷") {
                 return expression
             }
 
             val lastOperatorIndex =
-                expression.indexOfLast { it in "+-*/" }
+                expression.indexOfLast { it in "+-×÷" }
 
             val lastNumberSegment =
                 if (lastOperatorIndex == -1) {
