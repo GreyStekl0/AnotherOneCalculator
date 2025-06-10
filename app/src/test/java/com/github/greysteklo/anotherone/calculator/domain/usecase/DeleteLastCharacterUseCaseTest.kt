@@ -45,4 +45,11 @@ class DeleteLastCharacterUseCaseTest {
         val result = deleteLastCharacterUseCase.execute(expression)
         assertEquals("1 000", result)
     }
+
+    @Test
+    fun `execute returns correct string when expression has multiple digits and decimal point`() {
+        val expression = "10,000"
+        val result = deleteLastCharacterUseCase.execute(expression)
+        assertEquals("10,00", result)
+    }
 }
