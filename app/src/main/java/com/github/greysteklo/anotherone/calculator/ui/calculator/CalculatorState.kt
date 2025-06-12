@@ -1,4 +1,4 @@
-package com.github.greysteklo.anotherone.calculator.domain.model
+package com.github.greysteklo.anotherone.calculator.ui.calculator
 
 data class CalculatorState(
     val expression: String = "0",

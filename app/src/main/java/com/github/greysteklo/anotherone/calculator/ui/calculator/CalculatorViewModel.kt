@@ -1,7 +1,7 @@
 package com.github.greysteklo.anotherone.calculator.ui.calculator
 
 import androidx.lifecycle.ViewModel
-import com.github.greysteklo.anotherone.calculator.domain.model.CalculatorState
+import com.github.greysteklo.anotherone.calculator.ui.util.logOnFailure
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,8 +34,18 @@ class CalculatorViewModel
         private fun enterNumber(number: Int) {
             val expression = state.value.expression
             val newExpression = actions.enterNumber.execute(expression, number)
-            val newState = actions.calculate.execute(newExpression)
-            _state.update { newState }
+            val newResult =
+                actions.calculate
+                    .execute(newExpression)
+                    .logOnFailure { "Failed to calculate expression: $newExpression" }
+                    .getOrDefault("Error")
+
+            _state.update {
+                it.copy(
+                    expression = newExpression,
+                    result = newResult,
+                )
+            }
         }
 
         private fun enterOperation(operation: String) {
@@ -53,38 +63,82 @@ class CalculatorViewModel
         private fun enterDecimal() {
             val expression = state.value.expression
             val newExpression = actions.enterDecimal.execute(expression)
-            val newState = actions.calculate.execute(newExpression)
-            _state.update { newState }
+            val newResult =
+                actions.calculate
+                    .execute(newExpression)
+                    .logOnFailure { "Failed to calculate expression: $newExpression" }
+                    .getOrDefault("Error")
+
+            _state.update {
+                it.copy(
+                    expression = newExpression,
+                    result = newResult,
+                )
+            }
         }
 
         private fun clearAll() {
-            val newState = actions.clearAll.execute()
-            _state.update { newState }
+            _state.update { CalculatorState() }
         }
 
         private fun delete() {
             val expression = state.value.expression
             val newExpression = actions.deleteLastChar.execute(expression)
-            val newState = actions.calculate.execute(newExpression)
-            _state.update { newState }
+            val newResult =
+                actions.calculate
+                    .execute(newExpression)
+                    .logOnFailure { "Failed to calculate expression: $newExpression" }
+                    .getOrDefault("Error")
+
+            _state.update {
+                it.copy(
+                    expression = newExpression,
+                    result = newResult,
+                )
+            }
         }
 
         private fun enterParentheses() {
             val expression = state.value.expression
             val newExpression = actions.enterParentheses.execute(expression)
-            val newState = actions.calculate.execute(newExpression)
-            _state.update { newState }
+            val newResult =
+                actions.calculate
+                    .execute(newExpression)
+                    .logOnFailure { "Failed to calculate expression: $newExpression" }
+                    .getOrDefault("Error")
+
+            _state.update {
+                it.copy(
+                    expression = newExpression,
+                    result = newResult,
+                )
+            }
         }
 
         private fun enterPercent() {
             val expression = state.value.expression
-            val newState = actions.enterPercent.execute(expression)
-            _state.update { newState }
+            val newResult =
+                actions.enterPercent
+                    .execute(expression)
+                    .logOnFailure { "Failed to calculate percent of $expression" }
+                    .getOrDefault("Error")
+            _state.update {
+                it.copy(
+                    expression = newResult,
+                    result = newResult,
+                )
+            }
         }
 
         private fun enterEqually() {
-            val newState = actions.enterEqually.execute(state.value)
-            _state.update { newState }
+            if (_state.value.result != "Error") {
+                _state.update {
+                    it.copy(
+                        expression = it.result,
+                        result = it.result,
+                    )
+                }
+            }
         }
     }
 
