@@ -1,6 +1,6 @@
 package com.github.greysteklo.anotherone.calculator.domain.usecase
 
-import com.github.greysteklo.anotherone.calculator.domain.valueobject.CalculatorState
+import com.github.greysteklo.anotherone.calculator.domain.model.CalculatorState
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

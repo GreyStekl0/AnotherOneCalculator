@@ -1,7 +1,7 @@
 package com.github.greysteklo.anotherone.calculator.ui.calculator
 
 import androidx.lifecycle.ViewModel
-import com.github.greysteklo.anotherone.calculator.domain.valueobject.CalculatorState
+import com.github.greysteklo.anotherone.calculator.domain.model.CalculatorState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
