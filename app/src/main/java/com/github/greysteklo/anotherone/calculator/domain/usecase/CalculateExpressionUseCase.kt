@@ -9,17 +9,13 @@ class CalculateExpressionUseCase
         private val expressionEvaluator: ExpressionEvaluator,
     ) {
         fun execute(expression: String): Result<String> =
-            try {
-                expressionEvaluator.evaluate(expression).fold(
-                    onSuccess = { result ->
-                        val formattedResult = expressionEvaluator.formatResult(result)
-                        Result.success(formattedResult)
-                    },
-                    onFailure = { error ->
-                        Result.failure(error)
-                    },
-                )
-            } catch (e: Exception) {
-                Result.failure(e)
-            }
+            expressionEvaluator.evaluate(expression).fold(
+                onSuccess = { result ->
+                    val formattedResult = expressionEvaluator.formatResult(result)
+                    Result.success(formattedResult)
+                },
+                onFailure = { error ->
+                    Result.failure(error)
+                },
+            )
     }

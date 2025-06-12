@@ -1,12 +1,12 @@
 package com.github.greysteklo.anotherone.calculator.data.service
 
-import android.util.Log
 import com.ezylang.evalex.EvaluationException
 import com.ezylang.evalex.Expression
 import com.ezylang.evalex.config.ExpressionConfiguration
 import com.ezylang.evalex.parser.ParseException
 import com.github.greysteklo.anotherone.calculator.domain.service.EvaluationError
 import com.github.greysteklo.anotherone.calculator.domain.service.ExpressionEvaluator
+import timber.log.Timber
 import java.math.BigDecimal
 import java.math.MathContext
 import java.text.NumberFormat
@@ -41,7 +41,7 @@ class ExpressionEvaluatorImpl
                         is EvaluationException -> EvaluationError.CalculationError(e)
                         else -> EvaluationError.UnknownError(e)
                     }
-                Log.e("ExpressionEvaluatorImpl", "error in evaluate: $error")
+                Timber.e(error, "Error evaluating expression: $expression")
                 Result.failure(error)
             }
 

@@ -1,7 +1,6 @@
 package com.github.greysteklo.anotherone.calculator.ui.calculator
 
 import androidx.lifecycle.ViewModel
-import com.github.greysteklo.anotherone.calculator.ui.util.logOnFailure
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,7 +36,6 @@ class CalculatorViewModel
             val newResult =
                 actions.calculate
                     .execute(newExpression)
-                    .logOnFailure { "Failed to calculate expression: $newExpression" }
                     .getOrDefault("Error")
 
             _state.update {
@@ -66,7 +64,6 @@ class CalculatorViewModel
             val newResult =
                 actions.calculate
                     .execute(newExpression)
-                    .logOnFailure { "Failed to calculate expression: $newExpression" }
                     .getOrDefault("Error")
 
             _state.update {
@@ -87,7 +84,6 @@ class CalculatorViewModel
             val newResult =
                 actions.calculate
                     .execute(newExpression)
-                    .logOnFailure { "Failed to calculate expression: $newExpression" }
                     .getOrDefault("Error")
 
             _state.update {
@@ -104,7 +100,6 @@ class CalculatorViewModel
             val newResult =
                 actions.calculate
                     .execute(newExpression)
-                    .logOnFailure { "Failed to calculate expression: $newExpression" }
                     .getOrDefault("Error")
 
             _state.update {
@@ -120,7 +115,6 @@ class CalculatorViewModel
             val newResult =
                 actions.enterPercent
                     .execute(expression)
-                    .logOnFailure { "Failed to calculate percent of $expression" }
                     .getOrDefault("Error")
             _state.update {
                 it.copy(
