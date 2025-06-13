@@ -1,11 +1,15 @@
 package com.github.greysteklo.anotherone.calculator.ui.calculator
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.github.greysteklo.anotherone.calculator.domain.model.Calculation
+import com.github.greysteklo.anotherone.calculator.domain.repository.HistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -13,6 +17,7 @@ class CalculatorViewModel
     @Inject
     constructor(
         private val actions: CalculatorActions,
+        private val repository: HistoryRepository,
     ) : ViewModel() {
         private val _state = MutableStateFlow(CalculatorState())
         val state: StateFlow<CalculatorState> = _state.asStateFlow()
@@ -130,6 +135,14 @@ class CalculatorViewModel
                     it.copy(
                         expression = it.result,
                         result = it.result,
+                    )
+                }
+                viewModelScope.launch {
+                    repository.saveCalculation(
+                        Calculation(
+                            expression = _state.value.expression,
+                            result = _state.value.result,
+                        ),
                     )
                 }
             }
