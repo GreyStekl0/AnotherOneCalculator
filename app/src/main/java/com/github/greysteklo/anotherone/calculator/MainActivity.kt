@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.github.greysteklo.anotherone.calculator.ui.calculator.CalculatorScreen
+import com.github.greysteklo.anotherone.calculator.ui.CalculatorWithHistory
 import com.github.greysteklo.anotherone.calculator.ui.theme.AnotherOneCalculatorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AnotherOneCalculatorTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CalculatorScreen(Modifier.padding(innerPadding))
+                    CalculatorWithHistory(Modifier.padding(innerPadding))
                 }
             }
         }

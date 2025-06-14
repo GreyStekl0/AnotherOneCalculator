@@ -1,10 +1,12 @@
 package com.github.greysteklo.anotherone.calculator.ui.calculator
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,7 +29,7 @@ fun CalculatorScreen(
     Column(
         modifier =
             modifier
-                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
                 .padding(start = 8.dp, end = 8.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -130,19 +130,19 @@ class CalculatorViewModel
         }
 
         private fun enterEqually() {
+            viewModelScope.launch {
+                repository.saveCalculation(
+                    Calculation(
+                        expression = _state.value.expression,
+                        result = _state.value.result,
+                    ),
+                )
+            }
             if (_state.value.result != "Error") {
                 _state.update {
                     it.copy(
                         expression = it.result,
                         result = it.result,
-                    )
-                }
-                viewModelScope.launch {
-                    repository.saveCalculation(
-                        Calculation(
-                            expression = _state.value.expression,
-                            result = _state.value.result,
-                        ),
                     )
                 }
             }
