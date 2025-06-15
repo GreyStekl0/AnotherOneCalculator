@@ -1,11 +1,16 @@
 package com.github.greysteklo.anotherone.calculator.ui.calculator
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.github.greysteklo.anotherone.calculator.domain.model.Calculation
+import com.github.greysteklo.anotherone.calculator.domain.repository.HistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -13,6 +18,7 @@ class CalculatorViewModel
     @Inject
     constructor(
         private val actions: CalculatorActions,
+        private val repository: HistoryRepository,
     ) : ViewModel() {
         private val _state = MutableStateFlow(CalculatorState())
         val state: StateFlow<CalculatorState> = _state.asStateFlow()
@@ -125,11 +131,29 @@ class CalculatorViewModel
         }
 
         private fun enterEqually() {
-            if (_state.value.result != "Error") {
+            val currentState = _state.value
+            val expression = currentState.expression
+            val result = currentState.result
+
+            if (expression == result) return
+
+            viewModelScope.launch {
+                try {
+                    repository.saveCalculation(
+                        Calculation(
+                            expression = expression,
+                            result = result,
+                        ),
+                    )
+                } catch (e: Exception) {
+                    Timber.e(e, "Error saving $currentState to history")
+                }
+            }
+            if (result != "Error") {
                 _state.update {
                     it.copy(
-                        expression = it.result,
-                        result = it.result,
+                        expression = result,
+                        result = result,
                     )
                 }
             }
