@@ -20,8 +20,8 @@ android {
         applicationId = "com.github.greysteklo.anotherone.calculator"
         minSdk = 26
         targetSdk = 35
-        versionCode = 14
-        versionName = "1.4.8"
+        versionCode = 15
+        versionName = "1.5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
