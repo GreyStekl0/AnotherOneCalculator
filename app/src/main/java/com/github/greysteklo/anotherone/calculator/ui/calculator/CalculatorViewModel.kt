@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -130,19 +131,29 @@ class CalculatorViewModel
         }
 
         private fun enterEqually() {
+            val currentState = _state.value
+            val expression = currentState.expression
+            val result = currentState.result
+
+            if (expression == result) return
+
             viewModelScope.launch {
-                repository.saveCalculation(
-                    Calculation(
-                        expression = _state.value.expression,
-                        result = _state.value.result,
-                    ),
-                )
+                try {
+                    repository.saveCalculation(
+                        Calculation(
+                            expression = expression,
+                            result = result,
+                        ),
+                    )
+                } catch (e: Exception) {
+                    Timber.e(e, "Error saving $currentState to history")
+                }
             }
-            if (_state.value.result != "Error") {
+            if (result != "Error") {
                 _state.update {
                     it.copy(
-                        expression = it.result,
-                        result = it.result,
+                        expression = result,
+                        result = result,
                     )
                 }
             }
