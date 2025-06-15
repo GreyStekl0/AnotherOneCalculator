@@ -5,8 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.github.greysteklo.anotherone.calculator.ui.CalculatorWithHistory
 import com.github.greysteklo.anotherone.calculator.ui.theme.AnotherOneCalculatorTheme
@@ -19,9 +17,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AnotherOneCalculatorTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CalculatorWithHistory(Modifier.padding(innerPadding))
-                }
+                CalculatorWithHistory(Modifier.fillMaxSize())
             }
         }
     }
