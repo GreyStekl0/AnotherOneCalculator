@@ -29,15 +29,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.greysteklo.anotherone.calculator.domain.model.Calculation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
     onClose: () -> Unit,
+    onHistoryItemClick: (Calculation) -> Unit,
     isExpanded: Boolean,
     modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = hiltViewModel(),
@@ -108,11 +113,22 @@ fun HistoryScreen(
             ) {
                 items(historyList) { calculation ->
                     Text(
-                        text = "${calculation.expression} = ${calculation.result}",
+                        buildAnnotatedString {
+                            withStyle(SpanStyle(color = Color.Gray)) {
+                                append("${calculation.expression}= ")
+                            }
+                            withStyle(SpanStyle()) {
+                                append(calculation.result)
+                            }
+                        },
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .padding(end = 18.dp, start = 18.dp),
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = { onHistoryItemClick(calculation) },
+                                ).padding(end = 18.dp, start = 18.dp),
                         textAlign = TextAlign.End,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 40.sp,

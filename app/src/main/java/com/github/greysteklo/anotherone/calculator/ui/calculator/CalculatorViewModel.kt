@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.github.greysteklo.anotherone.calculator.domain.model.Calculation
 import com.github.greysteklo.anotherone.calculator.domain.repository.HistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,6 +25,9 @@ class CalculatorViewModel
         private val _state = MutableStateFlow(CalculatorState())
         val state: StateFlow<CalculatorState> = _state.asStateFlow()
 
+        private val _uiEvents = MutableSharedFlow<UiEvent>()
+        val uiEvents = _uiEvents.asSharedFlow()
+
         fun onAction(action: CalculatorAction) {
             when (action) {
                 is CalculatorAction.Number -> enterNumber(action.number)
@@ -33,6 +38,7 @@ class CalculatorViewModel
                 is CalculatorAction.Delete -> delete()
                 is CalculatorAction.Parentheses -> enterParentheses()
                 is CalculatorAction.Percent -> enterPercent()
+                is CalculatorAction.LoadFromHistory -> loadFromHistory(action.calculation)
             }
         }
 
@@ -130,6 +136,18 @@ class CalculatorViewModel
             }
         }
 
+        private fun loadFromHistory(calculation: Calculation) {
+            _state.update {
+                it.copy(
+                    expression = calculation.expression,
+                    result = calculation.result,
+                )
+            }
+            viewModelScope.launch {
+                _uiEvents.emit(UiEvent.CollapseHistory)
+            }
+        }
+
         private fun enterEqually() {
             val currentState = _state.value
             val expression = currentState.expression
@@ -160,6 +178,10 @@ class CalculatorViewModel
         }
     }
 
+sealed class UiEvent {
+    object CollapseHistory : UiEvent()
+}
+
 sealed class CalculatorAction {
     data class Number(
         val number: Int,
@@ -167,6 +189,10 @@ sealed class CalculatorAction {
 
     data class Operation(
         val operation: String,
+    ) : CalculatorAction()
+
+    data class LoadFromHistory(
+        val calculation: Calculation,
     ) : CalculatorAction()
 
     data object Decimal : CalculatorAction()

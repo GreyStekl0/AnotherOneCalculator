@@ -20,7 +20,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.github.greysteklo.anotherone.calculator.ui.calculator.CalculatorAction
 import com.github.greysteklo.anotherone.calculator.ui.calculator.CalculatorScreen
+import com.github.greysteklo.anotherone.calculator.ui.calculator.CalculatorViewModel
+import com.github.greysteklo.anotherone.calculator.ui.calculator.UiEvent
 import com.github.greysteklo.anotherone.calculator.ui.history.HistoryScreen
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -31,7 +35,10 @@ enum class DragAnchors {
 }
 
 @Composable
-fun CalculatorWithHistory(modifier: Modifier = Modifier) {
+fun CalculatorWithHistory(
+    modifier: Modifier = Modifier,
+    calculatorViewModel: CalculatorViewModel = hiltViewModel(),
+) {
     val scope = rememberCoroutineScope()
     var historyViewHeight by remember { mutableFloatStateOf(0f) }
 
@@ -41,6 +48,18 @@ fun CalculatorWithHistory(modifier: Modifier = Modifier) {
                 initialValue = DragAnchors.Collapsed,
             )
         }
+
+    LaunchedEffect(Unit) {
+        calculatorViewModel.uiEvents.collect { event ->
+            when (event) {
+                is UiEvent.CollapseHistory -> {
+                    scope.launch {
+                        state.animateTo(DragAnchors.Collapsed)
+                    }
+                }
+            }
+        }
+    }
 
     LaunchedEffect(historyViewHeight) {
         if (historyViewHeight > 0f) {
@@ -69,6 +88,9 @@ fun CalculatorWithHistory(modifier: Modifier = Modifier) {
                 scope.launch {
                     state.animateTo(DragAnchors.Collapsed)
                 }
+            },
+            onHistoryItemClick = { calculation ->
+                calculatorViewModel.onAction(CalculatorAction.LoadFromHistory(calculation))
             },
         )
 
