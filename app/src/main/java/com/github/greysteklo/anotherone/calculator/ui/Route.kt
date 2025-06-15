@@ -1,5 +1,6 @@
 package com.github.greysteklo.anotherone.calculator.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -48,6 +49,12 @@ fun CalculatorWithHistory(
                 initialValue = DragAnchors.Collapsed,
             )
         }
+
+    BackHandler(enabled = state.currentValue == DragAnchors.Expanded) {
+        scope.launch {
+            state.animateTo(DragAnchors.Collapsed)
+        }
+    }
 
     LaunchedEffect(Unit) {
         calculatorViewModel.uiEvents.collect { event ->
