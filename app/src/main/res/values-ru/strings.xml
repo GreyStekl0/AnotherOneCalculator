@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Another One Calculator</string>
+    <string name="history_header_yesterday">Вчера</string>
+    <string name="history_header_today">Сегодня</string>
+    <string name="history_name">История</string>
+    <string name="history_is_empty">История пуста</string>
+</resources>
