@@ -17,6 +17,7 @@ import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -36,13 +38,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.greysteklo.anotherone.calculator.domain.model.Calculation
+import com.github.greysteklo.anotherone.calculator.R
+import com.github.greysteklo.anotherone.calculator.domain.model.SavedCalculation
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
     onClose: () -> Unit,
-    onHistoryItemClick: (Calculation) -> Unit,
+    onHistoryItemClick: (SavedCalculation) -> Unit,
     isExpanded: Boolean,
     modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = hiltViewModel(),
@@ -54,7 +60,7 @@ fun HistoryScreen(
         topBar = {
             if (historyList.isNotEmpty()) {
                 CenterAlignedTopAppBar(
-                    title = { Text("History") },
+                    title = { Text(stringResource(id = R.string.history_name)) },
                     actions = {
                         IconButton(onClick = { viewModel.onClearHistory() }) {
                             Icon(
@@ -102,41 +108,84 @@ fun HistoryScreen(
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(text = "History is empty")
+                Text(text = stringResource(id = R.string.history_is_empty))
             }
         } else {
+            val sortedDates = historyList.keys.sortedDescending()
+
             LazyColumn(
                 modifier =
                     Modifier
                         .padding(innerPadding),
-                reverseLayout = true,
             ) {
-                items(historyList) { calculation ->
-                    Text(
-                        buildAnnotatedString {
-                            withStyle(SpanStyle(color = Color.Gray)) {
-                                append("${calculation.expression}= ")
-                            }
-                            withStyle(SpanStyle()) {
-                                append(calculation.result)
-                            }
-                        },
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null,
-                                    onClick = { onHistoryItemClick(calculation) },
-                                ).padding(end = 18.dp, start = 18.dp),
-                        textAlign = TextAlign.End,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontSize = 40.sp,
-                        lineHeight = 40.sp * 1.2,
-                        softWrap = false,
-                    )
+                sortedDates.forEachIndexed { index, date ->
+                    val calculationsForDate = historyList[date].orEmpty()
+
+                    stickyHeader {
+                        DateHeader(date = date)
+                    }
+                    items(calculationsForDate) { calculation ->
+                        Text(
+                            buildAnnotatedString {
+                                withStyle(SpanStyle(color = Color.DarkGray)) {
+                                    append("${calculation.expression}= ")
+                                }
+                                withStyle(SpanStyle()) {
+                                    append(calculation.result)
+                                }
+                            },
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null,
+                                        onClick = { onHistoryItemClick(calculation) },
+                                    ).padding(end = 18.dp, start = 18.dp),
+                            textAlign = TextAlign.End,
+                            fontSize = 40.sp,
+                            lineHeight = 40.sp * 1.2,
+                            softWrap = false,
+                        )
+                    }
+                    if (index < sortedDates.lastIndex) {
+                        item {
+                            HorizontalDivider(
+                                modifier =
+                                    Modifier
+                                        .padding(horizontal = 8.dp, vertical = 8.dp),
+                                thickness = 1.dp,
+                                color = Color.LightGray,
+                            )
+                        }
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+fun DateHeader(
+    date: LocalDate,
+    modifier: Modifier = Modifier,
+) {
+    val headerText =
+        when {
+            date.isEqual(LocalDate.now()) -> stringResource(id = R.string.history_header_today)
+            date.isEqual(LocalDate.now().minusDays(1)) -> stringResource(id = R.string.history_header_yesterday)
+            else -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+        }
+
+    Text(
+        text = headerText,
+        textAlign = TextAlign.End,
+        fontSize = 28.sp,
+        lineHeight = 28.sp * 1.2,
+        color = Color.Gray,
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp),
+    )
 }

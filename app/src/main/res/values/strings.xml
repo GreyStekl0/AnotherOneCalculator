@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Another One Calculator</string>
+    <string name="app_name" translatable="false">Another One Calculator</string>
+    <string name="history_header_yesterday">Yesterday</string>
+    <string name="history_header_today">Today</string>
+    <string name="history_name">History</string>
+    <string name="history_is_empty">History is empty</string>
 </resources>

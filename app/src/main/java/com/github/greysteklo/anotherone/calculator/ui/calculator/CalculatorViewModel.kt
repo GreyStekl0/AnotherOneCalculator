@@ -2,7 +2,7 @@ package com.github.greysteklo.anotherone.calculator.ui.calculator
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.greysteklo.anotherone.calculator.domain.model.Calculation
+import com.github.greysteklo.anotherone.calculator.domain.model.SavedCalculation
 import com.github.greysteklo.anotherone.calculator.domain.repository.HistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -136,7 +137,7 @@ class CalculatorViewModel
             }
         }
 
-        private fun loadFromHistory(calculation: Calculation) {
+        private fun loadFromHistory(calculation: SavedCalculation) {
             _state.update {
                 it.copy(
                     expression = calculation.expression,
@@ -158,9 +159,10 @@ class CalculatorViewModel
             viewModelScope.launch {
                 try {
                     repository.saveCalculation(
-                        Calculation(
+                        SavedCalculation(
                             expression = expression,
                             result = result,
+                            date = LocalDate.now(),
                         ),
                     )
                 } catch (e: Exception) {
@@ -192,7 +194,7 @@ sealed class CalculatorAction {
     ) : CalculatorAction()
 
     data class LoadFromHistory(
-        val calculation: Calculation,
+        val calculation: SavedCalculation,
     ) : CalculatorAction()
 
     data object Decimal : CalculatorAction()
