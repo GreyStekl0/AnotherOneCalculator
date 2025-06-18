@@ -1,12 +1,12 @@
 package com.github.greysteklo.anotherone.calculator.domain.repository
 
-import com.github.greysteklo.anotherone.calculator.domain.model.Calculation
+import com.github.greysteklo.anotherone.calculator.domain.model.SavedCalculation
 import kotlinx.coroutines.flow.Flow
 
 interface HistoryRepository {
-    suspend fun saveCalculation(calculation: Calculation)
+    suspend fun saveCalculation(savedCalculation: SavedCalculation)
 
-    fun getHistory(): Flow<List<Calculation>>
+    fun getHistory(): Flow<List<SavedCalculation>>
 
     suspend fun clearHistory()
 }

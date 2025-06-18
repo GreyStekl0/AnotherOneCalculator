@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.github.greysteklo.anotherone.calculator.data.local.HistoryDatabase
 import com.github.greysteklo.anotherone.calculator.data.local.dao.CalculationDao
+import com.github.greysteklo.anotherone.calculator.data.local.migration.ALL_MIGRATIONS
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +25,8 @@ object DatabaseModule {
                 context,
                 HistoryDatabase::class.java,
                 "calculation_history.db",
-            ).build()
+            ).addMigrations(*ALL_MIGRATIONS)
+            .build()
 
     @Provides
     @Singleton
