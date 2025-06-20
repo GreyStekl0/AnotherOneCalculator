@@ -59,6 +59,10 @@ fun HistoryScreen(
     val historyList by viewModel.history.collectAsStateWithLifecycle()
     val jokeState by viewModel.uiState.collectAsStateWithLifecycle()
     var jokeIsVisible by remember { mutableStateOf(false) }
+    val onShowJoke = {
+        jokeIsVisible = true
+        viewModel.getJoke()
+    }
 
     Scaffold(
         modifier = modifier.background(MaterialTheme.colorScheme.background),
@@ -69,10 +73,7 @@ fun HistoryScreen(
                         Text(
                             stringResource(id = R.string.history_name),
                             modifier =
-                                Modifier.clickable {
-                                    jokeIsVisible = true
-                                    viewModel.getJoke()
-                                },
+                                Modifier.clickable(onClick = onShowJoke),
                         )
                     },
                     actions = {
@@ -139,10 +140,7 @@ fun HistoryScreen(
                 Text(
                     text = stringResource(id = R.string.history_is_empty),
                     modifier =
-                        Modifier.clickable {
-                            jokeIsVisible = true
-                            viewModel.getJoke()
-                        },
+                        Modifier.clickable(onClick = onShowJoke),
                 )
             }
         } else {
