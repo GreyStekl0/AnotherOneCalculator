@@ -8,7 +8,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody.Companion.toResponseBody
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -20,27 +19,11 @@ import javax.inject.Singleton
 object NetworkModule {
     @Provides
     @Singleton
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-
-    @Provides
-    @Singleton
     @EngJokeApi
-    fun provideEngJokeApiOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
-        OkHttpClient
-            .Builder()
-            .addInterceptor(loggingInterceptor)
-            .build()
-
-    @Provides
-    @Singleton
-    @EngJokeApi
-    fun provideEngJokeApiRetrofit(
-        @EngJokeApi okHttpClient: OkHttpClient,
-    ): Retrofit =
+    fun provideEngJokeApiRetrofit(): Retrofit =
         Retrofit
             .Builder()
             .baseUrl("https://v2.jokeapi.dev/")
-            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -59,9 +42,17 @@ object NetworkModule {
             .addInterceptor { chain ->
                 val originalResponse = chain.proceed(chain.request())
                 val body = originalResponse.body
-                val bodyString = body?.bytes()?.toString(Charset.forName("windows-1251"))
 
-                val newBody = (bodyString ?: "").toResponseBody(body?.contentType())
+                val rawXmlString = body?.bytes()?.toString(Charset.forName("windows-1251")) ?: ""
+
+                val cleanText =
+                    rawXmlString
+                        .substringAfter("<content>", "")
+                        .substringBefore("</content>", "")
+                        .trim()
+
+                val newBody = cleanText.toResponseBody(body?.contentType())
+
                 originalResponse.newBuilder().body(newBody).build()
             }.build()
 
