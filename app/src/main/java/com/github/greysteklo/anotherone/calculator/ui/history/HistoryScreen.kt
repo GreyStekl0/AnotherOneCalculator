@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,7 +26,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,13 +57,24 @@ fun HistoryScreen(
     viewModel: HistoryViewModel = hiltViewModel(),
 ) {
     val historyList by viewModel.history.collectAsStateWithLifecycle()
+    val jokeState by viewModel.uiState.collectAsStateWithLifecycle()
+    var jokeIsVisible by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier.background(MaterialTheme.colorScheme.background),
         topBar = {
             if (historyList.isNotEmpty()) {
                 CenterAlignedTopAppBar(
-                    title = { Text(stringResource(id = R.string.history_name)) },
+                    title = {
+                        Text(
+                            stringResource(id = R.string.history_name),
+                            modifier =
+                                Modifier.clickable {
+                                    jokeIsVisible = true
+                                    viewModel.getJoke()
+                                },
+                        )
+                    },
                     actions = {
                         IconButton(onClick = { viewModel.onClearHistory() }) {
                             Icon(
@@ -100,6 +114,20 @@ fun HistoryScreen(
             }
         },
     ) { innerPadding ->
+        if (jokeIsVisible) {
+            BasicAlertDialog(
+                onDismissRequest = { jokeIsVisible = false },
+                modifier =
+                    Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            shape = MaterialTheme.shapes.extraLarge,
+                        ).padding(24.dp),
+                content = {
+                    Text(jokeState.joke.text)
+                },
+            )
+        }
         if (historyList.isEmpty()) {
             Box(
                 modifier =
@@ -108,7 +136,14 @@ fun HistoryScreen(
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(text = stringResource(id = R.string.history_is_empty))
+                Text(
+                    text = stringResource(id = R.string.history_is_empty),
+                    modifier =
+                        Modifier.clickable {
+                            jokeIsVisible = true
+                            viewModel.getJoke()
+                        },
+                )
             }
         } else {
             val sortedDates = historyList.keys.sortedDescending()
@@ -173,7 +208,10 @@ fun DateHeader(
     val headerText =
         when {
             date.isEqual(LocalDate.now()) -> stringResource(id = R.string.history_header_today)
-            date.isEqual(LocalDate.now().minusDays(1)) -> stringResource(id = R.string.history_header_yesterday)
+            date.isEqual(
+                LocalDate.now().minusDays(1),
+            ) -> stringResource(id = R.string.history_header_yesterday)
+
             else -> date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
         }
 

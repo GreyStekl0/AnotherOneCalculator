@@ -1,7 +1,9 @@
 package com.github.greysteklo.anotherone.calculator.di
 
 import com.github.greysteklo.anotherone.calculator.data.repository.HistoryRepositoryImpl
+import com.github.greysteklo.anotherone.calculator.data.repository.JokeRepositoryImpl
 import com.github.greysteklo.anotherone.calculator.domain.repository.HistoryRepository
+import com.github.greysteklo.anotherone.calculator.domain.repository.JokeRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,4 +16,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindHistoryRepository(impl: HistoryRepositoryImpl): HistoryRepository
+
+    @Binds
+    @Singleton
+    abstract fun provideJokeRepository(impl: JokeRepositoryImpl): JokeRepository
 }
