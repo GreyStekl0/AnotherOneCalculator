@@ -2,10 +2,11 @@ package com.github.greysteklo.anotherone.calculator.di
 
 import android.content.Context
 import androidx.core.os.ConfigurationCompat
+import com.github.greysteklo.anotherone.calculator.data.mapper.toDomainModel
 import com.github.greysteklo.anotherone.calculator.data.remote.api.EngJokeApiService
 import com.github.greysteklo.anotherone.calculator.data.remote.api.RuJokeApiService
-import com.github.greysteklo.anotherone.calculator.data.repository.EngJokeRepositoryImpl
-import com.github.greysteklo.anotherone.calculator.data.repository.RuJokeRepositoryImpl
+import com.github.greysteklo.anotherone.calculator.data.repository.JokeRepositoryImpl
+import com.github.greysteklo.anotherone.calculator.domain.model.Joke
 import com.github.greysteklo.anotherone.calculator.domain.repository.JokeRepository
 import dagger.Module
 import dagger.Provides
@@ -26,10 +27,17 @@ object JokeRepositoryModule {
     ): JokeRepository {
         val currentLanguage =
             ConfigurationCompat.getLocales(context.resources.configuration)[0]?.language
+
         return if (currentLanguage == "ru") {
-            RuJokeRepositoryImpl(ruApi)
+            JokeRepositoryImpl(
+                fetcher = { ruApi.getRandomJoke() },
+                mapper = { jokeText -> Joke(text = jokeText) },
+            )
         } else {
-            EngJokeRepositoryImpl(engApi)
+            JokeRepositoryImpl(
+                fetcher = { engApi.getRandomJoke() },
+                mapper = { jokeDto -> jokeDto.toDomainModel() },
+            )
         }
     }
 }
