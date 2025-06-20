@@ -20,11 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 # --- EvalEx ---
-# Сохраняем классы библиотеки EvalEx.
 -keep class com.ezylang.evalex.** { *; }
-# Удалить вызовы Log.v(), Log.d() и Log.i()
--assumenosideeffects class android.util.Log {
-    public static int v(...);
-    public static int d(...);
-    public static int i(...);
-}
+-keep class com.github.greysteklo.anotherone.calculator.data.remote.dto.** { *; }
