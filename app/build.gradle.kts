@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
+    implementation(libs.retrofit.scalars)
     implementation(libs.logging.interceptor)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
